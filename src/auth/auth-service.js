@@ -2,10 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
-const AuthService = {
-  getUserWithUserName(db, user_name) {
+const AuthServices = {
+  getUserWithUserName(db, email) {
     return db('tqm_users')
-      .where({ user_name })
+      .where({ email })
       .first()
   },
   checkPassword(password, hash) {
@@ -26,4 +26,4 @@ const AuthService = {
 
 }
 
-module.exports = AuthService
+module.exports = AuthServices

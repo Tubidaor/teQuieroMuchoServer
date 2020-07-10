@@ -1,5 +1,7 @@
 process.env.TZ = "UTC"
 process.env.NODE_ENV = 'test'
+process.env.JWT_SECRET = 'waltermercado'
+process.env.JWT_EXPIRY = '3m'
 
 require('dotenv').config()
 
