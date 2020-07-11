@@ -1,11 +1,14 @@
-require('dotenv').config()
-const express = require('express')
-const morgan = require('morgan')
-const cors = require('cors')
-const helmet = require('helmet')
-const { NODE_ENV } = require('./config')
-const app = express()
-const authRouter = require('./auth/auth-router')
+require('dotenv').config();
+const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+const helmet = require('helmet');
+const { NODE_ENV } = require('./config');
+const app = express();
+const authRouter = require('./auth/auth-router');
+const usersRouter = require('./users/users-router');
+
+
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
   : 'common';
@@ -16,6 +19,11 @@ app.use(cors())
 
 
 app.use('/api', authRouter)
+app.use('/api', usersRouter)
+
+
+
+
 app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
