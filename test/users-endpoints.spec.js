@@ -27,8 +27,8 @@ describe.only('Users Endpoints', function() {
     const registerAttemptBodyBad = {
       first_name: 'test user_name',
       last_name: 'test last_name',
-      email: 'test@email.com',
-      password: 'test password',
+      email: 'juan.baltazar1@gmail.com',
+      password: 'Password17!',
       birthday: '12/05/1983',
       gender: 'male',
     }
@@ -69,7 +69,7 @@ describe.only('Users Endpoints', function() {
       })
     })
 
-    
+    //sencond part
 
     it('2 responds password must be longer than 8 characters.', () => {
 
@@ -89,7 +89,7 @@ describe.only('Users Endpoints', function() {
     it('3 responds password must be less than 72  characters.', () => {
       const badPWTooLong = {
         ...registerAttemptBodyBad,
-        password: 'ad21fe5e1e2e1a1d2e5g5d5d5d5d5ddgg5sfe5fdadggdsefgdsefsdfgesdfge5sdfe54745'
+        password: '7'.repeat(73)
       }
 
       return supertest(app)
@@ -123,6 +123,43 @@ describe.only('Users Endpoints', function() {
       })
     }) 
 
+    it('5 responds: password must contain one uppercase, one number, and one special character', () => {
+
+      const badPwNoSpecCh = {
+        ...registerAttemptBodyBad,
+        password: 'passwordtest'
+      }
+
+
+      return supertest(app)
+        .post('/api/register')
+        .send(badPwNoSpecCh)
+        .expect(400, {
+          error: 'Password must contain 1 upper case, lower case, number, and special character.'
+        })
+    })
+    
+    describe('trying this out', () => {
+
+      beforeEach('emailtest', () => 
+        data.seedUsers(db, testUsers)
+      )
+      afterEach('testemail', () => data.cleanTables(db))
+
+    it('6 responds: email already exists', () => {
+
+      const badEmail = {
+        ...registerAttemptBodyBad,
+      }
+
+      return supertest(app)
+        .post('/api/register')
+        .send(badEmail)
+        .expect(400, {
+          error: 'email already exists.'
+        })
+    })
+  })
 
 
   })

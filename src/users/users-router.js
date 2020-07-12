@@ -3,7 +3,7 @@ const path = require('path');
 const usersRouter = express.Router();
 const jsonBodyParser = express.json();
 const UserServices = require('./users-services');
-const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 
 usersRouter
@@ -20,20 +20,20 @@ usersRouter
 
     const passwordError = UserServices.validatePassword(password)
 
-    console.log(passwordError)
 
     if(passwordError) {
       return res.status(400).json({ error: passwordError})
     }
 
-    UserServices.hasUserWithEmail(
+    UserServices.getUserWithEmail(
       req.app.get('db'),
       email
       )
       .then(emailAlreadyExists => {
-        const id = uuid()
+        const id = uuidv4()
+        console.log(emailAlreadyExists)
         if(emailAlreadyExists) {
-          return res.status(400).json({ error: 'Email already exists.'})
+          return res.status(400).json({ error: 'email already exists.'})
         }
         return UserServices.hashPassword(password)
           .then(hashedPassword => {

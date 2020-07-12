@@ -43,7 +43,7 @@ function cleanTables(db) {
     .then(() =>
       Promise.all([
         trx.raw(`ALTER SEQUENCE tqm_users_id_seq minvalue 0 START WITH 1`),
-        trx.raw(`SELECT setval('tqm_users_id_seq', 0)`),
+        trx.raw(`SELECT setval('tqm_users_id_seq', 1)`),
       ])
     )
   )
