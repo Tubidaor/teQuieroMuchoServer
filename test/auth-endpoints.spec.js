@@ -9,7 +9,7 @@ describe('Auth endpoints', function() {
 
   const { testUsers } = data.retrieveData()
   const testUser = testUsers[0]
-  console.log(testUser)
+  
   before('make knex instance', () => {
     db = knex({
       client: 'pg',
@@ -33,7 +33,7 @@ describe('Auth endpoints', function() {
     )
 
   const requiredFields = ['email', 'password']
-        console.log(testUser.email)
+      
   requiredFields.forEach(field => {
     const loginAttemptBody = {
       email: testUser.email,
@@ -62,7 +62,7 @@ describe('Auth endpoints', function() {
 
   it(`3 responds 400 'invalid email or passwords' bad password`, () => {
     const validUser = { email: testUser.email, password: 'badPassword'}
-    console.log(validUser)
+    
     return supertest(app)
       .post('/api/login')
       .send(validUser)

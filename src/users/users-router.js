@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 
 
 usersRouter
-  .post('/register', jsonBodyParser, (req, res, next) => {
+  .post('/users', jsonBodyParser, (req, res, next) => {
     const { first_name, last_name, email, password, birthday, gender } = req.body
 
     for(const field of ['first_name', 'last_name', 'email', 'password', 'birthday', 'gender'])
@@ -31,7 +31,7 @@ usersRouter
       )
       .then(emailAlreadyExists => {
         const id = uuidv4()
-        console.log(emailAlreadyExists)
+        
         if(emailAlreadyExists) {
           return res.status(400).json({ error: 'email already exists.'})
         }

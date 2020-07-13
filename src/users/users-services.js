@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs')
 const UserServices = {
 
   validatePassword(password) {
-    console.log(password)
+    
     if(password.length < 8) {
       return 'Password must be longer than 8 characters.'
     }
@@ -44,7 +44,10 @@ const UserServices = {
       id: user.user_id,
       first_name: xss(user.first_name),
       last_name: xss(user.last_name),
+      email: xss(user.email),
       birthday: xss(user.birthday),
+      gender: xss(user.gender),
+      date_created: user.date_created
     }
   },
   
