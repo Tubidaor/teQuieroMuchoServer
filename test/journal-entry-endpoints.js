@@ -42,6 +42,11 @@ describe.only('Protected journal entry endpoints', () => {
       path: '/api/textEntries/:user_id',
       method: supertest(app).get
     },
+    {
+      name: 'GET /api/textEntries/',
+      path: '/api/textEntries/:user_id',
+      method: supertest(app).post
+    },
 
   ]
 
@@ -90,17 +95,30 @@ describe.only('Protected journal entry endpoints', () => {
         expect(res.body.length).to.eql(3)
       })
   })
-  it('5 responds: 400, entry not found', () => {
+  it('5 responds: 404, entry not found', () => {
     const user = testUsers[1]
     const user_id = user.user_id
-    
+    console.log(user)
     return supertest(app)
       .get(`/api/textEntries/${user_id}`)
       .set('Authorization', data.makeAuthHeader(user))
-      .expect(200)
+      .expect(404)
       
   })
-      
+  
+  it('6 responds: 201 and entry created', () => {
+    const user = testUsers[0]
+    const user_id = user.user_id
+    const newEntry = {
+      text: 'sample entry for text',
+    }
+    return supertest(app)
+      .post(`/api/textEntries/${user_id}`)
+      .set('Authorization', data.makeAuthHeader(user))
+      .send(newEntry)
+      .expect(201)
+    
+  })
 
 
 

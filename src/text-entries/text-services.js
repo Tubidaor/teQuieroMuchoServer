@@ -23,7 +23,14 @@ const TextServices = {
       user_id: xss(entries.user_id),
       date_created: entries.date_created
     }
-  }, 
+  },
+  postTextEntry(db, newEntry) {
+    return db
+      .into('tqm_text_entries')
+      .insert(newEntry)
+      .returning('*')
+      .then(([entry]) => entry)
+  }
 
 
 
