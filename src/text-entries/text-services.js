@@ -13,8 +13,8 @@ const TextServices = {
         'tEntry.user_id',
         'tEntry.date_created',
       )
-      .where({'email': user})
-      .first()
+      .where({'user_id': user})
+      // .first()
   },
   serializeEntry(entries) {
     return {
@@ -23,7 +23,8 @@ const TextServices = {
       user_id: xss(entries.user_id),
       date_created: entries.date_created
     }
-  }
+  }, 
+
 
 
 }

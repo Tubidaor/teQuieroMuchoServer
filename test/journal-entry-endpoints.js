@@ -23,17 +23,23 @@ describe.only('Protected journal entry endpoints', () => {
 
   afterEach('clean up', () => data.cleanTables(db))
 
-  beforeEach('insert articles', () => 
+  beforeEach('insert articles', () => {
     data.seedTextTables(
       db,
       textEntries
     )
-  )
+
+    data.seedUsers(
+      db,
+      testUsers
+    )
+    }
+    )
 
   protectedEndpoints = [
     {
       name: 'GET /api/textEntries/',
-      path: '/api/textEntries',
+      path: '/api/textEntries/:user_id',
       method: supertest(app).get
     },
 
@@ -64,12 +70,37 @@ describe.only('Protected journal entry endpoints', () => {
           .set('Authorization', data.makeAuthHeader(invalidUser))
           .expect(401, { error: 'Unauthorized request'})
       })
-
-
-
-
     })
   })
+
+  it('4 responds: 200, and all text entries for user', () => {
+    const user = testUsers[0]
+    const user_id = user.user_id
+
+    return supertest(app)
+      .get(`/api/textEntries/${user_id}`)
+      .set('Authorization', data.makeAuthHeader(user))
+      .expect(200)
+      .expect(res => {
+        row = res.body[0]
+        expect(row).to.have.property('user_id')
+        expect(row).to.have.property('text')
+        expect(row).to.have.property('entry_id')
+        expect(row).to.have.property('date_created')
+        expect(res.body.length).to.eql(3)
+      })
+  })
+  it('5 responds: 400, entry not found', () => {
+    const user = testUsers[1]
+    const user_id = user.user_id
+    
+    return supertest(app)
+      .get(`/api/textEntries/${user_id}`)
+      .set('Authorization', data.makeAuthHeader(user))
+      .expect(200)
+      
+  })
+      
 
 
 

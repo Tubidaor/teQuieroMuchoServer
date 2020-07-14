@@ -34,14 +34,14 @@ function makeTextEntries() {
       id: 1,
       entry_id: '2e537fee-1e43-4357-890c-e96c477ba905',
       text: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`,
-      user_id: '13c0713a-ec31-4378-8aad-37a4c9f4a304',
+      user_id: '73b8bb71-c339-4029-bc70-6204928aa77b',
       date_created: '07/12/2020',
     }, 
     {
       id: 2,
       entry_id: '812ceba5-81d7-49d6-855a-9c2a7db81832',
       text: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.`,
-      user_id: '13c0713a-ec31-4378-8aad-37a4c9f4a304',
+      user_id: '73b8bb71-c339-4029-bc70-6204928aa77b',
       date_created: '07/10/2020',
     },
     {
@@ -75,7 +75,9 @@ function cleanTables(db) {
     .then(() =>
       Promise.all([
         trx.raw(`ALTER SEQUENCE tqm_users_id_seq minvalue 0 START WITH 1`),
-        trx.raw(`SELECT setval('tqm_users_id_seq', 1)`),
+        trx.raw(`ALTER SEQUENCE tqm_text_entries_id_seq minvalue 0 START WITH 1`),
+        trx.raw(`SELECT setval('tqm_users_id_seq', 0)`),
+        trx.raw(`SELECT setval('tqm_text_entries_id_seq', 0)`),
       ])
     )
   )
