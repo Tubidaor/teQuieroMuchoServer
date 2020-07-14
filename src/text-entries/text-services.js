@@ -26,10 +26,21 @@ const TextServices = {
   },
   postTextEntry(db, newEntry) {
     return db
-      .into('tqm_text_entries')
       .insert(newEntry)
+      .into('tqm_text_entries')
       .returning('*')
       .then(([entry]) => entry)
+      .then(entry =>
+        TextServices.getById(db, 'tqm_text_entries', entry.entry_id)
+      )
+  },
+  getById(db, table, id) {
+
+    return db
+      .from(table)
+      .select('*')
+      .where({'entry_id': id})
+      .first()
   }
 
 

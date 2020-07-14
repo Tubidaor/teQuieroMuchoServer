@@ -44,8 +44,7 @@ usersRouter
               email,
               birthday,
               gender,
-              password: hashedPassword,
-              date_created: 'now()'
+              password: hashedPassword
             }
 
             return UserServices.insertUser(

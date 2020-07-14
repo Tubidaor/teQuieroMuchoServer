@@ -5,7 +5,7 @@ CREATE TABLE tqm_text_entries (
   entry_id uuid NOT NULL PRIMARY KEY,
   text TEXT NOT NULL,
   user_id uuid NOT NULL,
-  date_created TIMESTAMP NOT NULL
+  date_created TIMESTAMP DEFAULT now() NOT NULL
 );
 
 CREATE TABLE tqm_audio_entries (
@@ -13,7 +13,7 @@ CREATE TABLE tqm_audio_entries (
   entry_id uuid NOT NULL PRIMARY KEY,
   text TEXT NOT NULL,
   user_id uuid NOT NULL,
-  date_created TIMESTAMP NOT NULL
+  date_created TIMESTAMP DEFAULT now() NOT NULL
 );
 
 CREATE TABLE tqm_video_entries (
@@ -21,7 +21,7 @@ CREATE TABLE tqm_video_entries (
   entry_id uuid NOT NULL PRIMARY KEY,
   text TEXT NOT NULL,
   user_id uuid NOT NULL,
-  date_created TIMESTAMP NOT NULL
+  date_created TIMESTAMP DEFAULT now() NOT NULL
 );
 
 CREATE TABLE tqm_file_entries (
@@ -29,7 +29,7 @@ CREATE TABLE tqm_file_entries (
   entry_id uuid NOT NULL PRIMARY KEY,
   text TEXT NOT NULL,
   user_id uuid NOT NULL,
-  date_created TIMESTAMP NOT NULL
+  date_created TIMESTAMP DEFAULT now() NOT NULL
 );
 
 COMMIT;

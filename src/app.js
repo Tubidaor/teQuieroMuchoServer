@@ -5,8 +5,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
 const app = express();
-const textEntryRouter = require('./text-entries/text-entries.js')
+const textEntryRouter = require('./text-entries/text-entries.js');
 const usersRouter = require('./users/users-router');
+const authRouter = require('./auth/auth-router');
 
 
 const morganOption = (NODE_ENV === 'production')
@@ -20,6 +21,7 @@ app.use(cors())
 
 app.use('/api', textEntryRouter)
 app.use('/api', usersRouter)
+app.use('/api', authRouter)
 
 
 

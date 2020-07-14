@@ -4,7 +4,7 @@ const data = require('./test-helpers');
 const supertest = require('supertest');
 
 
-describe.only('Protected journal entry endpoints', () => {
+describe('Protected journal entry endpoints', () => {
   let db
 
   const { textEntries, testUsers } = data.retrieveData() 
