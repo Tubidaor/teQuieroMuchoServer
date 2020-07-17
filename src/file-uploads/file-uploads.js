@@ -37,15 +37,20 @@ const upload = multer({storage})
 fileUploadsRouter
   .route('/files')
   // .all(requireAuth)
-  .post(upload.single('profile'), (req, res, next ) => {
+  .post(upload.array('profile', 5), jsonBodyParser, (req, res, next ) => {
     console.log('this is req body', req.body.entry_id)
-    const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
-    const newFileEntry = {
-      entry_id: req.body.entry_id,
-      file_name: req.file.filename,
-      file_path: req.file.path,
-      file_type: req.file.mimetype,
-      user_id: user_id
+    let newFileEntry = []
+    for(let i = 0; i < req.files.length; i++) {
+      const entry_id = req.files[i].filename.slice(0,36)
+      const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
+      const fileEntry = {
+        entry_id: entry_id,
+        file_name: req.files[i].filename,
+        file_path: req.files[i].path,
+        file_type: req.files[i].mimetype,
+        user_id: user_id
+      }
+      newFileEntry.push(fileEntry)
     }
 
     FileServices.postFileInfo(
