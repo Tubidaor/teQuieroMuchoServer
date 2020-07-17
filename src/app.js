@@ -8,6 +8,7 @@ const app = express();
 const textEntryRouter = require('./text-entries/text-entries.js');
 const usersRouter = require('./users/users-router');
 const authRouter = require('./auth/auth-router');
+const fileUploadsRouter = require('./file-uploads/file-uploads');
 
 
 const morganOption = (NODE_ENV === 'production')
@@ -22,6 +23,7 @@ app.use(cors())
 app.use('/api', textEntryRouter)
 app.use('/api', usersRouter)
 app.use('/api', authRouter)
+app.use('/api', fileUploadsRouter)
 
 
 
