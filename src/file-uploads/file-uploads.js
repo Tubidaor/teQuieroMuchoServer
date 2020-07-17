@@ -32,36 +32,44 @@ let storage = multer.diskStorage({
     cb(null, `${entry_id}-${file_name}`)
   }
 })
-const upload = multer({storage})
+const upload = multer({storage}).array('files', 5)
 
 fileUploadsRouter
   .route('/files')
   // .all(requireAuth)
-  .post(upload.array('profile', 5), jsonBodyParser, (req, res, next ) => {
-    console.log('this is req body', req.body.entry_id)
-    let newFileEntry = []
-    for(let i = 0; i < req.files.length; i++) {
-      const entry_id = req.files[i].filename.slice(0,36)
-      const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
-      const fileEntry = {
-        entry_id: entry_id,
-        file_name: req.files[i].filename,
-        file_path: req.files[i].path,
-        file_type: req.files[i].mimetype,
-        user_id: user_id
+  .post(jsonBodyParser, (req, res, next ) => {
+
+    upload(req, res, (err) => {
+      if(err instanceof multer.MulterError) {
+        return res.json({error: err})
+      } else if (err) {
+        return res.json({error: err})
+      } 
+
+      let newFileEntry = []
+      for(let i = 0; i < req.files.length; i++) {
+        const entry_id = req.files[i].filename.slice(0,36)
+        const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
+        const fileEntry = {
+          entry_id: entry_id,
+          file_name: req.files[i].filename,
+          file_path: req.files[i].path,
+          file_type: req.files[i].mimetype,
+          user_id: user_id
+        }
+        newFileEntry.push(fileEntry)
       }
-      newFileEntry.push(fileEntry)
-    }
-
-    FileServices.postFileInfo(
-      req.app.get('db'),
-      newFileEntry
-    )
-    .then(entry => {
-
-      res
-        .status(201)
-        .json(entry)
+  
+      FileServices.postFileInfo(
+        req.app.get('db'),
+        newFileEntry
+      )
+      .then(entry => {
+  
+        res
+          .status(201)
+          .json(entry)
+      })
     })
   })
 

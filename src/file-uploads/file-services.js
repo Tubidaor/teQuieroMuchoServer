@@ -7,7 +7,7 @@ const FileServices = {
       .returning('*')
       .then(([entry]) => entry)
       .then(entry =>
-        FileServices.getFileById(db, 'tqm_file_uploads', entry[0].entry_id)
+        FileServices.getFileById(db, 'tqm_file_uploads', entry.entry_id)
       )
   },
 
