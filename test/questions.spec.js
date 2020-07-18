@@ -2,6 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const supertest = require('supertest');
 const helpers = require('./test-helpers');
+const { expect } = require('chai');
 
 
 
@@ -55,6 +56,37 @@ describe.only('Question Endpoints', () => {
           .expect(401, { error: `Field '${field}' is missing in request body.`})
 
       })
+    })
+
+    it('2 Responds: 201 entry created and entry', () => {
+
+      const qAttemptBody = {
+        question_id: 'e773a595-5990-4678-a63c-9ea11f3df831',
+        joy: 90,
+        disgust: 0,
+        sadness: 5,
+        anger: 0,
+        fear: 5,
+        mood: 80
+      }
+
+      return supertest(app)
+        .post('/api/questionaire')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+        .send(qAttemptBody)
+        .expect(201)
+        .expect(res => {
+          expect(res.body).to.have.property('id')
+          expect(res.body.question_id).to.eql(qAttemptBody.question_id)
+          expect(res.body.joy).to.eql(qAttemptBody.joy)
+          expect(res.body.disgust).to.eql(qAttemptBody.disgust)
+          expect(res.body.sadness).to.eql(qAttemptBody.sadness)
+          expect(res.body.anger).to.eql(qAttemptBody.anger)
+          expect(res.body.fear).to.eql(qAttemptBody.fear)
+          expect(res.body.mood).to.eql(qAttemptBody.mood)
+
+        })
+
     })
           
         

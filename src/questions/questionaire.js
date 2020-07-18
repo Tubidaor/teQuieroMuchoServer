@@ -16,7 +16,6 @@ questionaireRouter
     const { user_id } = req.user
     const { question_id, joy, disgust, sadness, anger, fear, mood } = req.body
     const id = uuidv4()
-    console.log(req.body)
     const scores = ['question_id', 'joy', 'disgust', 'sadness', 'anger', 'fear', 'mood']
 
     for( const field of scores )
