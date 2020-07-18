@@ -1,13 +1,13 @@
 const knex = require('knex');
 const app = require('../src/app');
-const data = require('./test-helpers');
+const helpers = require('./test-helpers');
 const supertest = require('supertest');
 
 
-describe.only('Protected journal entry endpoints', () => {
+describe('Protected journal entry endpoints', () => {
   let db
 
-  const { textEntries, testUsers } = data.retrieveData() 
+  const { textEntries, testUsers } = helpers.retrieveData() 
 
   before('make knex instance', () => {
     db = knex({
@@ -19,17 +19,17 @@ describe.only('Protected journal entry endpoints', () => {
 
   after('disconnect from db', () => db.destroy())
 
-  before('clean up', () => data.cleanTables(db))
+  before('clean up', () => helpers.cleanTables(db))
 
-  afterEach('clean up', () => data.cleanTables(db))
+  afterEach('clean up', () => helpers.cleanTables(db))
 
-  beforeEach('insert articles', () => {
-    data.seedTextTables(
+  beforeEach('insert data into tables', () => {
+    helpers.seedTextTables(
       db,
       textEntries
     )
 
-    data.seedUsers(
+    helpers.seedUsers(
       db,
       testUsers
     )
@@ -63,7 +63,7 @@ describe.only('Protected journal entry endpoints', () => {
         const validUser = testUsers[0]
         const invalidSecret = 'bad-secret'
         return endpoint.method(endpoint.path)
-          .set('Authorization', data.makeAuthHeader(validUser, invalidSecret, ))
+          .set('Authorization', helpers.makeAuthHeader(validUser, invalidSecret, ))
           .expect(401, { error: 'Unauthorized request'})
 
       })
@@ -72,7 +72,7 @@ describe.only('Protected journal entry endpoints', () => {
         const invalidUser = { email: 'bad@email.com', user_id: '2'}
 
         return endpoint.method(endpoint.path)
-          .set('Authorization', data.makeAuthHeader(invalidUser))
+          .set('Authorization', helpers.makeAuthHeader(invalidUser))
           .expect(401, { error: 'Unauthorized request'})
       })
     })
@@ -84,7 +84,7 @@ describe.only('Protected journal entry endpoints', () => {
 
     return supertest(app)
       .get(`/api/textEntries/${user_id}`)
-      .set('Authorization', data.makeAuthHeader(user))
+      .set('Authorization', helpers.makeAuthHeader(user))
       .expect(200)
       .expect(res => {
         row = res.body[0]
@@ -101,7 +101,7 @@ describe.only('Protected journal entry endpoints', () => {
     console.log(user)
     return supertest(app)
       .get(`/api/textEntries/${user_id}`)
-      .set('Authorization', data.makeAuthHeader(user))
+      .set('Authorization', helpers.makeAuthHeader(user))
       .expect(404)
       
   })
@@ -114,7 +114,7 @@ describe.only('Protected journal entry endpoints', () => {
     }
     return supertest(app)
       .post(`/api/textEntries/${user_id}`)
-      .set('Authorization', data.makeAuthHeader(user))
+      .set('Authorization', helpers.makeAuthHeader(user))
       .send(newEntry)
       .expect(201)
     

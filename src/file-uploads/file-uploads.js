@@ -38,12 +38,11 @@ fileUploadsRouter
   .route('/files')
   // .all(requireAuth)
   .post(jsonBodyParser, (req, res, next ) => {
-
     upload(req, res, (err) => {
       if(err instanceof multer.MulterError) {
         return res.json({error: err})
-      } else if (err) {
-        return res.json({error: err})
+      } else if (!req.files) {
+        return res.json({error: 'Please select files.'})
       } 
 
       let newFileEntry = []

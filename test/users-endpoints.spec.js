@@ -1,13 +1,13 @@
 const knex = require('knex');
 const app = require('../src/app');
-const data = require('./test-helpers');
+const helpers = require('./test-helpers');
 const bcrypt = require('bcryptjs');
 const supertest = require('supertest');
 const { expect } = require('chai');
 
 describe('Users Endpoints', function() {
   let db
-  const { testUsers } = data.retrieveData()
+  const { testUsers } = helpers.retrieveData()
   const testUser = testUsers[0]
 
   before('make knex instance', () => {
@@ -20,9 +20,9 @@ describe('Users Endpoints', function() {
 
   after('disconnect from db', () => db.destroy())
 
-  before('cleanup', () => data.cleanTables(db))
+  before('cleanup', () => helpers.cleanTables(db))
 
-  afterEach('cleanup', () => data.cleanTables(db))
+  afterEach('cleanup', () => helpers.cleanTables(db))
 
   describe('POST /api/users', () => {
     const usersAttemptBodyBad = {
@@ -36,7 +36,7 @@ describe('Users Endpoints', function() {
 
     context(`User Validation`, () => {
       beforeEach('Insert users', () =>
-        data.seedUsers(
+        helpers.seedUsers(
           db,
           testUsers
         )
@@ -142,9 +142,9 @@ describe('Users Endpoints', function() {
     describe('Duplicate email', () => {
 
       beforeEach('emailtest', () => 
-        data.seedUsers(db, testUsers)
+        helpers.seedUsers(db, testUsers)
       )
-      afterEach('testemail', () => data.cleanTables(db))
+      afterEach('testemail', () => helpers.cleanTables(db))
 
     it('6 responds: email already exists', () => {
 

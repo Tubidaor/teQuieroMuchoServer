@@ -34,12 +34,12 @@ const TextServices = {
         TextServices.getById(db, 'tqm_text_entries', entry.entry_id)
       )
   },
-  getById(db, table, id) {
+  getById(db, table, entry_id) {
 
     return db
       .from(table)
       .select('*')
-      .where({'entry_id': id})
+      .where({entry_id})
       .first()
   }
 

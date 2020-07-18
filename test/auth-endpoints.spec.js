@@ -1,13 +1,13 @@
 const knex = require('knex');
 const app = require('../src/app');
-const data = require('./test-helpers');
+const helpers = require('./test-helpers');
 const jwt = require('jsonwebtoken');
 const supertest = require('supertest');
 
 describe('Auth endpoints', function() {
   let db
 
-  const { testUsers } = data.retrieveData()
+  const { testUsers } = helpers.retrieveData()
   const testUser = testUsers[0]
   
   before('make knex instance', () => {
@@ -20,13 +20,13 @@ describe('Auth endpoints', function() {
 
   after('disconnect from db', () => db.destroy())
 
-  before('cleanup', () => data.cleanTables(db))
+  before('cleanup', () => helpers.cleanTables(db))
 
-  afterEach('cleanup', () => data.cleanTables(db))
+  afterEach('cleanup', () => helpers.cleanTables(db))
 
   describe('POST /api/login', () => {
     beforeEach('insert users', () =>
-      data.seedUsers(
+      helpers.seedUsers(
         db,
         testUsers
       )
