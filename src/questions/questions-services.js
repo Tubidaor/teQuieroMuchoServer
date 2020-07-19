@@ -43,6 +43,13 @@ const QuestionServices = {
       
   },
 
+  getUserQuestions(db, user_id) {
+    return db
+      .from('tqm_user_questions')
+      .select('*')
+      .where({user_id})
+  }
+
 }
 
 module.exports = QuestionServices

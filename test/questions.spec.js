@@ -131,6 +131,31 @@ describe.only('Question Endpoints', () => {
 
       })
     })
+
+    describe.only('User questions endpoing', () => {
+
+      it('1 Responds: 200 and all entries by user', () => {
+
+        const user = testUsers[0].user_id
+
+        return supertest(app)
+          .get('/api/user-questions')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(200)
+          .expect(res => {
+            const row = res.body[0]
+            expect(res.body.length).to.eql(6)
+            expect(row).to.have.property('id')
+            expect(row).to.have.property('question_id')
+            expect(row).to.have.property('question')
+            expect(row).to.have.property('user_id')
+            expect(row).to.have.property('category')
+            expect(row).to.have.property('date_created')
+          })
+      })
+    })
+
+
           
         
   })
