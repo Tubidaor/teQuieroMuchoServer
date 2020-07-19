@@ -46,6 +46,7 @@ questionaireRouter
         .status(201)
         .send(entry)
     })
+    .catch(next)
 
 
   })

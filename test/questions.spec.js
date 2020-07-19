@@ -88,6 +88,27 @@ describe.only('Question Endpoints', () => {
         })
 
     })
+
+    describe('General Questions Endpoint', () => {
+
+      it('1 Responds: 200, and questions for opening section', () => {
+
+        return supertest(app)
+          .get('/api/general-questions')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(200)
+          .expect(res => {
+            console.log( res.body)
+            const row = res.body[0]
+            expect(res.body.length).to.eql(14)
+            expect(row).to.have.property('id')
+            expect(row).to.have.property('question_id')
+            expect(row).to.have.property('question')
+            expect(row).to.have.property('category')
+            expect(row).to.have.property('section')
+          })
+      })
+    })
           
         
   })

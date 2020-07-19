@@ -16,6 +16,31 @@ const QuestionServices = {
       .select('*')
       .where({entry_id})
       .first()
+  },
+
+  postGenQuestion(db, newGenQuestion) {
+    return db
+      .into('tqm_gen_questions')
+      .insert(newGenQuestion)
+      .returning('*')
+      .then(([entry]) => entry)
+      .then(entry =>
+        QuestionServices.getQuestionById(db, 'tqm_gen_questions', entry.entry_id))
+  },
+
+  getGenQuestionById(db, table, entry_id) {
+    return db
+      .from(table)
+      .select('*')
+      .where({entry_id})
+      .first()
+  },
+
+  getOpeningQuestions(db) {
+    return db
+      .from('tqm_gen_questions')
+      .select('*')
+      
   }
 }
 

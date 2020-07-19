@@ -9,7 +9,8 @@ const textEntryRouter = require('./text-entries/text-entries.js');
 const usersRouter = require('./users/users-router');
 const authRouter = require('./auth/auth-router');
 const fileUploadsRouter = require('./file-uploads/file-uploads');
-const questionaireRouter = require('./questions/questionaire');
+const questionaireRouter = require('./questions/questionaire'); 
+const generalQsRouter = require('./questions/questionsGeneral');
 
 
 const morganOption = (NODE_ENV === 'production')
@@ -26,6 +27,7 @@ app.use('/api', usersRouter)
 app.use('/api', authRouter)
 app.use('/api', fileUploadsRouter)
 app.use('/api', questionaireRouter)
+app.use('/api', generalQsRouter)
 
 
 
