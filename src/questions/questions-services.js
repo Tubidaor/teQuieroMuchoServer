@@ -23,16 +23,16 @@ const QuestionServices = {
       .into('tqm_gen_questions')
       .insert(newGenQuestion)
       .returning('*')
-      .then(([entry]) => entry)
-      .then(entry =>
-        QuestionServices.getQuestionById(db, 'tqm_gen_questions', entry.entry_id))
+      .then(([question]) => question)
+      .then(question =>
+        QuestionServices.getQuestionById(db, 'tqm_gen_questions', question.question_id))
   },
 
-  getGenQuestionById(db, table, entry_id) {
+  getQuestionById(db, table, question_id) {
     return db
       .from(table)
       .select('*')
-      .where({entry_id})
+      .where({question_id})
       .first()
   },
 
@@ -41,7 +41,8 @@ const QuestionServices = {
       .from('tqm_gen_questions')
       .select('*')
       
-  }
+  },
+
 }
 
 module.exports = QuestionServices

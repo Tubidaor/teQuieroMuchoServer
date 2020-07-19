@@ -98,7 +98,7 @@ describe.only('Question Endpoints', () => {
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200)
           .expect(res => {
-            console.log( res.body)
+            
             const row = res.body[0]
             expect(res.body.length).to.eql(14)
             expect(row).to.have.property('id')
@@ -107,6 +107,28 @@ describe.only('Question Endpoints', () => {
             expect(row).to.have.property('category')
             expect(row).to.have.property('section')
           })
+      })
+
+      const requiredFields = ['question', 'category', 'section']
+
+      requiredFields.forEach(field => {
+        const rAttemptBody = {
+          question: 'How do you do what you do?',
+          category: 'Sex',
+          section: 'Relationship'
+        }
+
+        it(`2 Responds: 400, Missing ${field} in request body.`, () => {
+
+          delete rAttemptBody[field]
+
+          return supertest(app)
+            .post('/api/general-questions')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .send(rAttemptBody)
+            .expect(400, {error: `Field '${field}' is missing from request body.`})
+        })
+
       })
     })
           
