@@ -132,7 +132,7 @@ describe.only('Question Endpoints', () => {
       })
     })
 
-    describe.only('User questions endpoing', () => {
+    describe.only('User questions endpoint', () => {
 
       it('1 Responds: 200 and all entries by user', () => {
 
@@ -152,6 +152,51 @@ describe.only('Question Endpoints', () => {
             expect(row).to.have.property('category')
             expect(row).to.have.property('date_created')
           })
+      })
+
+      const requiredFields = ['question', 'category']
+
+      requiredFields.forEach(field => {
+        const qAttemptBody = {
+          question: 'What will it take?',
+          category: 'Sex',
+        }
+
+        it(`1 Responds: Field '${field}' is missing from request body.`, () => {
+          delete qAttemptBody[field]
+
+          return supertest(app)
+            .post('/api/user-questions')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .send(qAttemptBody)
+            .expect(400, {error: `Field '${field}' is missing from request body.`})
+            })
+        })
+
+        it('2 Responds: 201 and question submitted', () => {
+
+          const newQuestion = {
+              question: 'What will it take?',
+              category: 'Sex',
+          }
+
+          return supertest(app)
+            .post('/api/user-questions')
+            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+            .send(newQuestion)
+            .expect(201)
+            .expect(res => {
+              const row = res.body
+              
+              expect(row).to.have.property('id')
+              expect(row).to.have.property('question_id')
+              expect(row).to.have.property('question')
+              expect(row).to.have.property('category')
+              expect(row.user_id).to.eql(testUsers[0].user_id)
+              expect(row.question).to.eql(newQuestion.question)
+
+            })
+
       })
     })
 

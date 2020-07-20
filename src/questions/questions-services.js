@@ -48,6 +48,15 @@ const QuestionServices = {
       .from('tqm_user_questions')
       .select('*')
       .where({user_id})
+  },
+
+  postUserQuestions(db, newQuestion) {
+    return db
+      .into('tqm_user_questions')
+      .insert(newQuestion)
+      .returning('*')
+      .then(([question]) => question)
+      .then(question => QuestionServices.getQuestionById(db, 'tqm_user_questions', question.question_id))
   }
 
 }
