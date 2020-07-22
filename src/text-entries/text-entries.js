@@ -1,5 +1,4 @@
 const express = require('express');
-const knex = require('knex');
 const textEntryRouter = express.Router();
 const jsonBodyParser = express.json();
 const { requireAuth } = require('../middleware/jwt-auth');

@@ -1,6 +1,4 @@
-const knex = require('knex');
 const express = require('express');
-const app = require('../app');
 const fileUploadsRouter = express.Router();
 const jsonBodyParser = express.json();
 const { requireAuth } = require('../middleware/jwt-auth');

@@ -1,5 +1,3 @@
-const knex = require('knex');
-const app = require('../app');
 const express = require('express');
 const questionaireRouter = express.Router();
 const { requireAuth } = require('../middleware/jwt-auth');
