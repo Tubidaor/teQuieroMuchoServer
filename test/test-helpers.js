@@ -19,9 +19,9 @@ function makeUsersArray() {
       user_id: '13c0713a-ec31-4378-8aad-37a4c9f4a304',
       first_name: 'megan',
       last_name: 'baltazar',
-      email: 'megan.laurel17@gmail.com',
+      email: 'meganlaurel17@gmail.com',
       birthday: '10/17/1981',
-      gender: 'male',
+      gender: 'female',
       password: 'faith',
       date_created: '07/07/2020'
     }

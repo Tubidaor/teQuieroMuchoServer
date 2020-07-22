@@ -14,6 +14,7 @@ const generalQsRouter = require('./questions/questionsGeneral');
 const userQsRouter = require('./questions/questionsUser');
 const videosRouter = require('./video/video-router');
 const audioRouter = require('./audio-files/audio-router');
+const imagesRouter = require('./image-files/images-router')
 
 
 const morganOption = (NODE_ENV === 'production')
@@ -34,6 +35,7 @@ app.use('/api', generalQsRouter)
 app.use('/api', userQsRouter)
 app.use('/api', videosRouter)
 app.use('/api', audioRouter)
+app.use('/api', imagesRouter)
 
 
 
