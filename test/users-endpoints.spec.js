@@ -2,8 +2,7 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 const bcrypt = require('bcryptjs');
-const supertest = require('supertest');
-const { expect } = require('chai');
+
 
 describe('Users Endpoints', function() {
   let db

@@ -219,13 +219,83 @@ function makeUserQuestions() {
   ]
 }
 
+function makeFileUploads() {
+  return [
+    {
+      "id" : 1,
+      "entry_id" : "cbb7d0cd-3187-49b2-87b0-51898a6521bb",
+      "file_name" : "cbb7d0cd-3187-49b2-87b0-51898a6521bb-a6qxon08a6m8dvgpkm1j_normal.jpeg",
+      "file_path" : "uploads\/73b8bb71-c339-4029-bc70-6204928aa77b\/cbb7d0cd-3187-49b2-87b0-51898a6521bb-a6qxon08a6m8dvgpkm1j_normal.jpeg",
+      "file_type" : "image\/jpeg",
+      "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+      "date_created" : "2020-07-22T04:40:29Z"
+    },
+    {
+      "id" : 2,
+      "entry_id" : "4d35a449-0ba8-4e89-b841-5fdee5012c9d",
+      "file_name" : "4d35a449-0ba8-4e89-b841-5fdee5012c9d-acWNy7VC_normal.jpeg",
+      "file_path" : "uploads\/73b8bb71-c339-4029-bc70-6204928aa77b\/4d35a449-0ba8-4e89-b841-5fdee5012c9d-acWNy7VC_normal.jpeg",
+      "file_type" : "image\/jpeg",
+      "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+      "date_created" : "2020-07-22T04:40:29Z"
+    },
+    {
+      "id" : 3,
+      "entry_id" : "56ec49b8-7dea-4133-af5d-5d9ee8e7ce44",
+      "file_name" : "56ec49b8-7dea-4133-af5d-5d9ee8e7ce44-1f44f.png",
+      "file_path" : "uploads\/73b8bb71-c339-4029-bc70-6204928aa77b\/56ec49b8-7dea-4133-af5d-5d9ee8e7ce44-1f44f.png",
+      "file_type" : "image\/png",
+      "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+      "date_created" : "2020-07-22T04:40:58Z"
+    },
+    {
+      "id" : 4,
+      "entry_id" : "b1cb593a-2edc-47d3-9dd0-bb259203d45a",
+      "file_name" : "b1cb593a-2edc-47d3-9dd0-bb259203d45a-ByJ3NcjCEAINEoP.png",
+      "file_path" : "uploads\/73b8bb71-c339-4029-bc70-6204928aa77b\/b1cb593a-2edc-47d3-9dd0-bb259203d45a-ByJ3NcjCEAINEoP.png",
+      "file_type" : "image\/png",
+      "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+      "date_created" : "2020-07-22T04:40:58Z"
+    },
+    {
+      "id" : 5,
+      "entry_id" : "988af6d4-0665-4601-8b1d-3b7ae725ae02",
+      "file_name" : "988af6d4-0665-4601-8b1d-3b7ae725ae02-ByJg8ZICYAAoT86.png",
+      "file_path" : "uploads\/73b8bb71-c339-4029-bc70-6204928aa77b\/988af6d4-0665-4601-8b1d-3b7ae725ae02-ByJg8ZICYAAoT86.png",
+      "file_type" : "image\/png",
+      "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+      "date_created" : "2020-07-22T04:40:58Z"
+    },
+    {
+      "id" : 6,
+      "entry_id" : "19031af3-349b-4c77-ba4d-e52b3345b90e",
+      "file_name" : "19031af3-349b-4c77-ba4d-e52b3345b90e-Cowboys Vs Titans 3rd Down Defense :Week 2 2014.mp4",
+      "file_path" : "uploads\/73b8bb71-c339-4029-bc70-6204928aa77b\/19031af3-349b-4c77-ba4d-e52b3345b90e-Cowboys Vs Titans 3rd Down Defense :Week 2 2014.mp4",
+      "file_type" : "video\/mp4",
+      "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+      "date_created" : "2020-07-22T05:46:43Z"
+    },
+    {
+      "id" : 7,
+      "entry_id" : "009e10fd-a3dd-4b61-be55-b43d8476cd9c",
+      "file_name" : "009e10fd-a3dd-4b61-be55-b43d8476cd9c-audioTest.m4a",
+      "file_path" : "uploads\/73b8bb71-c339-4029-bc70-6204928aa77b\/009e10fd-a3dd-4b61-be55-b43d8476cd9c-audioTest.m4a",
+      "file_type" : "audio\/mp4",
+      "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+      "date_created" : "2020-07-22T07:52:39Z"
+    }
+      
+  ]
+}
+
 function retrieveData() {
   const testUsers = makeUsersArray()
   const textEntries = makeTextEntries()
   const genQuestions = makeGenQuestions()
   const userQuestions = makeUserQuestions()
+  const fileUploads = makeFileUploads()
 
-  return { testUsers, textEntries, genQuestions, userQuestions }
+  return { testUsers, textEntries, genQuestions, userQuestions, fileUploads }
 }
 
 function cleanTables(db) {
@@ -312,6 +382,18 @@ function seedUserQuestions(db, userQuestions) {
     )
 }
 
+function seedFileUploads(db, fileUploads) {
+  return db
+    .into('tqm_file_uploads')
+    .insert(fileUploads)
+    .then(() => {
+      db.raw(
+        `SELECT setval('tqm_file_uploads_id_seq', ?)`,
+        [fileUploads[fileUploads.length -1].id],
+      )
+    })
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign(
     {user_id: user.user_id},
@@ -332,5 +414,6 @@ module.exports = {
   seedTextTables,
   makeAuthHeader,
   seedGenQuestions,
-  seedUserQuestions
+  seedUserQuestions,
+  seedFileUploads
 }

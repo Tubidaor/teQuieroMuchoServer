@@ -1,12 +1,11 @@
 const knex = require('knex');
 const app = require('../src/app');
-const supertest = require('supertest');
 const helpers = require('./test-helpers');
-const { expect } = require('chai');
 
 
 
-describe.only('Question Endpoints', () => {
+
+describe('Question Endpoints', () => {
 
   let db
 
@@ -132,7 +131,7 @@ describe.only('Question Endpoints', () => {
       })
     })
 
-    describe.only('User questions endpoint', () => {
+    describe('User questions endpoint', () => {
 
       it('1 Responds: 200 and all entries by user', () => {
 
@@ -194,17 +193,8 @@ describe.only('Question Endpoints', () => {
               expect(row).to.have.property('category')
               expect(row.user_id).to.eql(testUsers[0].user_id)
               expect(row.question).to.eql(newQuestion.question)
-
             })
-
       })
     })
-
-
-          
-        
   })
-
-
-
 })
