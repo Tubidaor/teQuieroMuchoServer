@@ -15,7 +15,7 @@ questionaireRouter
     const { question_id, joy, disgust, sadness, anger, fear, mood } = req.body
     const id = uuidv4()
     const scores = ['question_id', 'joy', 'disgust', 'sadness', 'anger', 'fear', 'mood']
-
+    console.log(req.body)
     for( const field of scores )
       if(!req.body.hasOwnProperty(field)) {
         return res
