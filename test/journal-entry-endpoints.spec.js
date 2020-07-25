@@ -37,13 +37,13 @@ describe('Protected journal entry endpoints', () => {
 
   protectedEndpoints = [
     {
-      name: 'GET /api/textEntries/',
-      path: '/api/textEntries/:user_id',
+      name: 'GET /api/text-entry/',
+      path: '/api/text-entry',
       method: supertest(app).get
     },
     {
-      name: 'GET /api/textEntries/',
-      path: '/api/textEntries/:user_id',
+      name: 'GET /api/text-entry/',
+      path: '/api/text-entry',
       method: supertest(app).post
     },
 
@@ -79,10 +79,10 @@ describe('Protected journal entry endpoints', () => {
 
   it('4 responds: 200, and all text entries for user', () => {
     const user = testUsers[0]
-    const user_id = user.user_id
+    
 
     return supertest(app)
-      .get(`/api/textEntries/${user_id}`)
+      .get(`/api/text-entry`)
       .set('Authorization', helpers.makeAuthHeader(user))
       .expect(200)
       .expect(res => {
@@ -99,20 +99,20 @@ describe('Protected journal entry endpoints', () => {
     const user_id = user.user_id
     console.log(user)
     return supertest(app)
-      .get(`/api/textEntries/${user_id}`)
+      .get(`/api/text-entry`)
       .set('Authorization', helpers.makeAuthHeader(user))
       .expect(404)
       
   })
   
-  it('6 responds: 201 and entry created', () => {
+  it.only('6 responds: 201 and entry created', () => {
     const user = testUsers[0]
-    const user_id = user.user_id
+    
     const newEntry = {
       text: 'sample entry for text',
     }
     return supertest(app)
-      .post(`/api/textEntries/${user_id}`)
+      .post(`/api/text-entry`)
       .set('Authorization', helpers.makeAuthHeader(user))
       .send(newEntry)
       .expect(201)

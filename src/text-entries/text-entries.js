@@ -7,11 +7,12 @@ const {v4: uuidv4} = require('uuid')
 
 
 textEntryRouter
-  .route('/textEntries/:user_id')
+  .route('/text-entry')
   .all(requireAuth)
   .all(checkTheresEntries)
   .get((req, res, next) => {
-    const user_id = req.user.user_id
+    const  { user_id } = req.user
+    
     
         TextServices.getTextEntries(req.app.get('db'), user_id)
           .then(textEntries => {
@@ -43,16 +44,17 @@ textEntryRouter
   }
 
   textEntryRouter
-    .route('/textEntries/:user_id')
+    .route('/text-entry')
     .all(requireAuth)
     .post(jsonBodyParser, (req, res, next) => {
-      const user_id = req.user.user_id
+      console.log(req.body)
+      const  { user_id } = req.user
       const { text } = req.body
       const id = uuidv4()
       const newEntry = {
-        user_id: user_id,
+        user_id,
         text,
-        entry_id: id,
+        entry_id: id
       }
 
       TextServices.postTextEntry(
