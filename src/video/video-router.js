@@ -33,10 +33,20 @@ videoRouter
   })
 
   videoRouter
-    .route('/video-stream')
+    .route('/video-stream/:entry_id')
     // .all(requireAuth)
-    .get((req, res, next) => {
-      const filePath = path.join(process.cwd(),'/uploads/73b8bb71-c339-4029-bc70-6204928aa77b/5e1a08cd-f165-49bf-8372-e041d69a8f53-WIN_20200804_17_16_56_Pro.mp4')
+    .get(async (req, res, next) => {
+      const {entry_id} = req.params
+      async function findVideo(db, video) {
+        return db
+          .from('tqm_file_uploads')
+          .select('file_path')
+          .where({'entry_id': video})
+          .first()
+      }
+      const findVideoPath = await findVideo(req.app.get('db'), entry_id )
+      console.log(findVideoPath.file_path)
+      const filePath = path.join(process.cwd(), findVideoPath.file_path)
       console.log(filePath)
       const stat = fs.statSync(filePath)
       const fileSize = stat.size
