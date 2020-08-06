@@ -34,7 +34,7 @@ videoRouter
 
   videoRouter
     .route('/video-stream/:entry_id')
-    // .all(requireAuth)
+    .all(requireAuth)
     .get(async (req, res, next) => {
       const {entry_id} = req.params
       async function findVideo(db, video) {
