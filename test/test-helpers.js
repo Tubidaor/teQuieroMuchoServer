@@ -284,6 +284,23 @@ function makeFileUploads() {
     }
       
   ]
+
+}
+
+function makeTestRelationships() {
+  return [
+    {
+      id: 1,
+      user_id: '73b8bb71-c339-4029-bc70-6204928aa77b',
+      user_first_name: 'juan',
+      user_last_name: 'baltazar',
+      user_email: 'juan.baltazar1@gmail.com',
+      partner_id: '13c0713a-ec31-4378-8aad-37a4c9f4a304',
+      partner_first_name: 'megan',
+      partner_last_name: 'baltazar',
+      partner_email: 'meganlaurel17@gmail.com'
+    }
+  ]
 }
 
 function retrieveData() {
@@ -292,8 +309,9 @@ function retrieveData() {
   const genQuestions = makeGenQuestions()
   const userQuestions = makeUserQuestions()
   const fileUploads = makeFileUploads()
+  const testRelationships = makeTestRelationships()
 
-  return { testUsers, textEntries, genQuestions, userQuestions, fileUploads }
+  return { testUsers, textEntries, genQuestions, userQuestions, fileUploads, testRelationships }
 }
 
 function cleanTables(db) {
@@ -396,6 +414,18 @@ function seedFileUploads(db, fileUploads) {
     })
 }
 
+function seedRelationshipReq(db, testRelationships) {
+  return db
+    .into('tqm_relationship_request')
+    .insert(testRelationships)
+    .then(() => {
+      db.raw(
+        `SELECT setval('tqm_relationship_request_id_seq', ?)`,
+        [testRelationships[testRelationships.length -1].id],
+      )
+    })
+}
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign(
     {user_id: user.user_id},
@@ -417,5 +447,6 @@ module.exports = {
   makeAuthHeader,
   seedGenQuestions,
   seedUserQuestions,
-  seedFileUploads
+  seedFileUploads,
+  seedRelationshipReq
 }

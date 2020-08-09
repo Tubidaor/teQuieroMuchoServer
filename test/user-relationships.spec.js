@@ -1,9 +1,11 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const supertest = require('supertest');
+const { expect } = require('chai');
 
 
-describe('user relationship test', () => {
+describe.only('user relationship test', () => {
 
   let db
   before('connect to db', () => {
@@ -22,13 +24,13 @@ describe('user relationship test', () => {
     
   })
 
-  const { testUsers } = helpers.retrieveData()
+  const { testUsers, testRelationships } = helpers.retrieveData()
   const testUser = testUsers[0]
   const testPartner = testUsers[1]
 
   
 
-  it.only('1 responds: 201 and posts user relation', () => {
+  it('1 responds: 201 and posts user relation', () => {
     const reqBody = {
       user_id: testUser.user_id,
       partner_email: testPartner.email,
@@ -42,6 +44,24 @@ describe('user relationship test', () => {
       .expect(res => {
         expect(res.body).to.have.property('user_id')
       })
-})
+  })
 
+  describe('Get request for rel request', () => {
+    beforeEach('load test relationshps', () => 
+    helpers.seedRelationshipReq(db, testRelationships)
+    )
+
+    it('2 responds: 200 and user relationship', () => {
+      
+      
+      return supertest(app)
+      .get('/api/user-relationship')
+      .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
+      .expect(200)
+      .expect(res => 
+        expect(res.body).to.eql(testRelationships[0])
+        )
+      })
+      
+    })
 })

@@ -41,4 +41,19 @@ userRelationships
         .catch(next)
   })
 
+  userRelationships
+    .route('/user-relationship')
+    // .all(requireAuth)
+    .get((req, res, next) => {
+      const {user_id} = req.user
+      UserRelServices.verifyRequest(req.app.get('db'), user_id)
+        .then(relationship => {
+          console.log(relationship)
+          res
+            .status(200)
+            .json(relationship)
+        })
+        .catch(next)
+    })
+
   module.exports = userRelationships
