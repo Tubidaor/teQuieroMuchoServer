@@ -35,7 +35,6 @@ const TextServices = {
       )
   },
   getById(db, table, entry_id) {
-
     return db
       .from(table)
       .select('*')

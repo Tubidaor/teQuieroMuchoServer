@@ -44,7 +44,7 @@ audioRouter
         .first()
     }
     const findAudioPath = await findAudio(req.app.get('db'), entry_id )
-    console.log(findAudioPath.file_path)
+    console.log(req.user)
     const filePath = path.join(process.cwd(), findAudioPath.file_path)
     console.log(filePath)
     const stat = fs.statSync(filePath)
