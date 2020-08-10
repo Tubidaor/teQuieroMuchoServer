@@ -23,11 +23,25 @@ const UserRelServices = {
         UserRelServices.verifyRequest(db, partner.partner_id)
       )
   },
+  postRelationship(db, relationship) {
+    return db
+      .insert(relationship)
+      .into('tqm_user_relationship')
+      .returning('*')
+      .then(([relationship]) => relationship)
+  },
   verifyRequest(db, partner_id) {
     return db
       .from('tqm_relationship_request')
       .select('*')
       .where({partner_id})
+      .first()
+  },
+  verifyRelationship(db, relationship_id) {
+    return db
+      .from('tqm_relationship')
+      .select('*')
+      .where({relationship_id})
       .first()
   },
   deleteRequest(db, partner_id) {

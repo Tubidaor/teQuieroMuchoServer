@@ -105,7 +105,7 @@ describe('Protected journal entry endpoints', () => {
       
   })
   
-  it.only('6 responds: 201 and entry created', () => {
+  it('6 responds: 201 and entry created', () => {
     const user = testUsers[0]
     
     const newEntry = {

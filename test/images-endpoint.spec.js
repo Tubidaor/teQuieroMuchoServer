@@ -3,7 +3,7 @@ const app = require('../src/app');
 const helpers = require('./test-helpers')
 
 
-describe.only('Images endpoint', () => {
+describe('Images endpoint', () => {
   let db
   const { testUsers, fileUploads } = helpers.retrieveData()
 

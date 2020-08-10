@@ -3,9 +3,10 @@ const { requireAuth } = require('../middleware/jwt-auth');
 const userRelationships = express.Router();
 const jsonBodyParser = express.json()
 const UserRelServices = require('./user-relationships-services');
+const { v4:uuidv4 } = require('uuid')
 
 userRelationships
-  .route('/user-relationship')
+  .route('/user-relationship-request')
   .all( requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
     const { user_id, first_name, last_name, email } = req.user
@@ -68,5 +69,42 @@ userRelationships
       .catch(next)
   })
 
+  userRelationships
+    .route('/user-relationship')
+    .all(requireAuth)
+    .post(jsonBodyParser, (req, res, next) => {
+      const {
+        user_id,
+        user_first_name,
+        user_last_name,
+        user_email,
+        partner_id,
+        partner_first_name,
+        partner_last_name,
+        partner_email
+      } = req.body
+
+
+      const id = uuidv4()
+      const relationship = {
+        relationship_id: id,
+        user_id,
+        user_first_name,
+        user_last_name,
+        user_email,
+        partner_id,
+        partner_first_name,
+        partner_last_name,
+        partner_email
+      }
+      
+      UserRelServices.postRelationship(req.app.get('db'), relationship)
+        .then(postedRel =>
+          res
+            .status(201)
+            .end()
+            )
+            .catch(next)
+    })
 
   module.exports = userRelationships

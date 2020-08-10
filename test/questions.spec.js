@@ -1,6 +1,7 @@
 const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
+const supertest = require('supertest');
 
 
 
@@ -9,7 +10,7 @@ describe('Question Endpoints', () => {
 
   let db
 
-  const { userQuestions, genQuestions, testUsers } = helpers.retrieveData()
+  const { userQuestions, genQuestions, testUsers, testAnswers } = helpers.retrieveData()
 
   before('Create knex Instance', () => {
     db = knex({
@@ -29,6 +30,7 @@ describe('Question Endpoints', () => {
     helpers.seedUsers(db, testUsers)
     helpers.seedGenQuestions(db, genQuestions)
     helpers.seedUserQuestions(db, userQuestions)
+    helpers.seedQuestionAnswers(db, testAnswers)
   })
 
   describe('Questionare answer posts', () => {
@@ -194,6 +196,30 @@ describe('Question Endpoints', () => {
               expect(row.user_id).to.eql(testUsers[0].user_id)
               expect(row.question).to.eql(newQuestion.question)
             })
+      })
+
+      it.only('3 responds: 200 and all of users answers', () => {
+
+        return supertest(app)
+          .get('/api/user-answers')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(200)
+          .expect(res => {
+            const row = res.body[0]
+            
+            expect(row).to.have.property('entry_id')
+            expect(row).to.have.property('user_id')
+            expect(row).to.have.property('question_id')
+            expect(row).to.have.property('joy')
+            expect(row).to.have.property('disgust')
+            expect(row).to.have.property('sadness')
+            expect(row).to.have.property('anger')
+            expect(row).to.have.property('fear')
+            expect(row).to.have.property('mood')
+            expect(row).to.have.property('date_created')
+            expect(row.user_id).to.eql(testUsers[0].user_id)
+            expect(res.body.length).to.eql(54)
+          })
       })
     })
   })

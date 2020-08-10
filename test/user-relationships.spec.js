@@ -5,7 +5,7 @@ const supertest = require('supertest');
 const { expect } = require('chai');
 
 
-describe.only('user relationship test', () => {
+describe('user relationship test', () => {
 
   let db
   before('connect to db', () => {
@@ -37,7 +37,7 @@ describe.only('user relationship test', () => {
     }
 
     return supertest(app)
-      .post('/api/user-relationship')
+      .post('/api/user-relationship-request')
       .set('Authorization', helpers.makeAuthHeader(testUser))
       .send(reqBody)
       .expect(201)
@@ -55,7 +55,7 @@ describe.only('user relationship test', () => {
       
       
       return supertest(app)
-        .get('/api/user-relationship')
+        .get('/api/user-relationship-request')
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
         .expect(200)
         .expect(res => 
@@ -66,12 +66,35 @@ describe.only('user relationship test', () => {
     it('3 responds with status 204 and deletes request', () => {
 
       return supertest(app)
-        .delete('/api/user-relationship')
+        .delete('/api/user-relationship-request')
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
         .expect(204)
     })
+    })
 
-    
+    describe('user-relationshp', () => {
+      beforeEach('load relationship', () => 
+        helpers.seedRelationshipReq(db, testRelationships)
+      )
       
+      it('4 responds: 201 and relationship data', () => {
+      const relationshipReqBody = {
+        user_id: testUser.user_id,
+        user_first_name: testUser.first_name,
+        user_last_name: testUser.last_name,
+        user_email: testUser.email,
+        partner_id: testPartner.user_id,
+        partner_first_name: testPartner.first_name,
+        partner_last_name: testPartner.last_name,
+        partner_email: testPartner.email 
+      }
+
+      return supertest(app)
+        .post('/api/user-relationship')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
+        .send(relationshipReqBody)
+        .expect(201)
+        
+      })
     })
 })

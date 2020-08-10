@@ -57,6 +57,13 @@ const QuestionServices = {
       .returning('*')
       .then(([question]) => question)
       .then(question => QuestionServices.getQuestionById(db, 'tqm_user_questions', question.question_id))
+  },
+
+  getAnswersByUser(db, user_id) {
+    return db
+      .from('tqm_questionaire')
+      .select('*')
+      .where({user_id})
   }
 
 }

@@ -3,7 +3,7 @@ const app = require('../src/app');
 const helpers = require('./test-helpers')
 
 
-describe.only('Audio endpoint', () => {
+describe('Audio endpoint', () => {
   let db
   const { testUsers, fileUploads } = helpers.retrieveData()
 
