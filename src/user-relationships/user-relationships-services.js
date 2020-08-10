@@ -30,7 +30,12 @@ const UserRelServices = {
       .where({partner_id})
       .first()
   },
-
+  deleteRequest(db, partner_id) {
+    return db
+      .from('tqm_relationship_request')
+      .where({partner_id})
+      .del()
+  }
 }
 
 module.exports = UserRelServices

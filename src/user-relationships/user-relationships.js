@@ -40,20 +40,33 @@ userRelationships
       })
         .catch(next)
   })
-
-  userRelationships
-    .route('/user-relationship')
-    // .all(requireAuth)
-    .get((req, res, next) => {
-      const {user_id} = req.user
-      UserRelServices.verifyRequest(req.app.get('db'), user_id)
-        .then(relationship => {
-          console.log(relationship)
-          res
-            .status(200)
-            .json(relationship)
+  .get((req, res, next) => {
+    const {user_id} = req.user
+    UserRelServices.verifyRequest(req.app.get('db'), user_id)
+      .then(relationship => {
+        console.log(relationship)
+        res
+          .status(200)
+          .json(relationship)
+      })
+      .catch(next)
+  })
+  .delete((req, res, next) => {
+    const {user_id} = req.user
+    UserRelServices.deleteRequest(req.app.get('db'), user_id)
+      .then(row => {
+        console.log(row)
+      
+        UserRelServices.verifyRequest(req.app.get('db'), user_id )
+          .then(del => {
+            console.log('this got deleted', del)
+            res
+              .status(204)
+              .end()
+          })
         })
-        .catch(next)
-    })
+      .catch(next)
+  })
+
 
   module.exports = userRelationships

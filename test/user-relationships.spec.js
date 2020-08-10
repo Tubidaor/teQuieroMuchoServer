@@ -55,13 +55,23 @@ describe.only('user relationship test', () => {
       
       
       return supertest(app)
-      .get('/api/user-relationship')
-      .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
-      .expect(200)
-      .expect(res => 
-        expect(res.body).to.eql(testRelationships[0])
-        )
+        .get('/api/user-relationship')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
+        .expect(200)
+        .expect(res => 
+          expect(res.body).to.eql(testRelationships[0])
+          )
       })
+
+    it('3 responds with status 204 and deletes request', () => {
+
+      return supertest(app)
+        .delete('/api/user-relationship')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
+        .expect(204)
+    })
+
+    
       
     })
 })
