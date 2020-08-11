@@ -61,9 +61,26 @@ const QuestionServices = {
 
   getAnswersByUser(db, user_id) {
     return db
-      .from('tqm_questionaire')
-      .select('*')
-      .where({user_id})
+      .from('tqm_questionaire as qs')
+      .select(
+        'qs.user_id',
+        'qs.joy',
+        'qs.disgust',
+        'qs.sadness',
+        'qs.anger',
+        'qs.fear',
+        'qs.mood',
+        'qs.date_created',
+        'gen.question',
+        'gen.category',
+        'gen.section'
+      )
+      .rightJoin('tqm_gen_questions as gen',
+      'qs.question_id',
+      'gen.question_id'
+      )
+      .where('qs.user_id', user_id)
+
   }
 
 }

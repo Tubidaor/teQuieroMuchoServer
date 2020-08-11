@@ -207,9 +207,7 @@ describe('Question Endpoints', () => {
           .expect(res => {
             const row = res.body[0]
             
-            expect(row).to.have.property('entry_id')
             expect(row).to.have.property('user_id')
-            expect(row).to.have.property('question_id')
             expect(row).to.have.property('joy')
             expect(row).to.have.property('disgust')
             expect(row).to.have.property('sadness')
@@ -217,6 +215,9 @@ describe('Question Endpoints', () => {
             expect(row).to.have.property('fear')
             expect(row).to.have.property('mood')
             expect(row).to.have.property('date_created')
+            expect(row).to.have.property('category')
+            expect(row).to.have.property('question')
+            expect(row).to.have.property('section')
             expect(row.user_id).to.eql(testUsers[0].user_id)
             expect(res.body.length).to.eql(54)
           })

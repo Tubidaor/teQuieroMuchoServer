@@ -54,11 +54,12 @@ questionaireRouter
       const { user_id } = req.user
   
       QuestionServices.getAnswersByUser(req.app.get('db'), user_id)
-        .then(answers => 
+        .then(answers => {
+          console.log(answers)
           res
             .status(200)
             .json(answers)
-        )
+        })
         .catch(next)
     })
 
