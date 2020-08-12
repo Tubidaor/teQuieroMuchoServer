@@ -77,23 +77,16 @@ describe('user relationship test', () => {
         helpers.seedRelationshipReq(db, testRelationships)
       )
       
-      it('4 responds: 201 and relationship data', () => {
+      it.only('4 responds: 201 and relationship data', () => {
       const relationshipReqBody = {
-        user_id: testUser.user_id,
-        user_first_name: testUser.first_name,
-        user_last_name: testUser.last_name,
-        user_email: testUser.email,
         partner_id: testPartner.user_id,
-        partner_first_name: testPartner.first_name,
-        partner_last_name: testPartner.last_name,
-        partner_email: testPartner.email 
       }
 
       return supertest(app)
-        .post('/api/user-relationship')
+        .put('/api/user-relationship')
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
         .send(relationshipReqBody)
-        .expect(201)
+        .expect(204)
         
       })
     })

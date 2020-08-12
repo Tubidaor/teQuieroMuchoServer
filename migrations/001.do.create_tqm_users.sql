@@ -7,5 +7,6 @@ CREATE TABLE tqm_users (
   gender TEXT NOT NULL,
   birthday DATE NOT NULL,
   password TEXT NOT NULL,
+  relationship_id uuid,
   date_created TIMESTAMP DEFAULT now() NOT NULL
 );

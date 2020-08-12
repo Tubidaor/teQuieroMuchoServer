@@ -198,7 +198,7 @@ describe('Question Endpoints', () => {
             })
       })
 
-      it.only('3 responds: 200 and all of users answers', () => {
+      it('3 responds: 200 and all of users answers', () => {
 
         return supertest(app)
           .get('/api/user-answers')

@@ -49,6 +49,14 @@ const UserRelServices = {
       .from('tqm_relationship_request')
       .where({partner_id})
       .del()
+  },
+  updateRelationship(db, relationship) {
+    return db('tqm_users')
+      .update({relationship_id: relationship.relationship_id})
+      .where({user_id: relationship.partner1})
+      .andWhere({user_id: relationship.partner2})
+      .returning('*')
+      .then(([rel]) => rel)
   }
 }
 

@@ -1040,8 +1040,7 @@ function cleanTables(db) {
         tqm_questionaire,
         tqm_gen_questions,
         tqm_user_questions,
-        tqm_relationship_request,
-        tqm_user_relationship
+        tqm_relationship_request
       `
     )
     .then(() =>
@@ -1053,7 +1052,6 @@ function cleanTables(db) {
         trx.raw(`ALTER SEQUENCE tqm_gen_questions_id_seq minvalue 0 START WITH 1`),
         trx.raw(`ALTER SEQUENCE tqm_user_questions_id_seq minvalue 0 START WITH 1`),
         trx.raw(`ALTER SEQUENCE tqm_relationship_request_id_seq minvalue 0 START WITH 1`),
-        trx.raw(`ALTER SEQUENCE tqm_user_relationship_id_seq minvalue 0 START WITH 1`),
         trx.raw(`SELECT setval('tqm_users_id_seq', 0)`),
         trx.raw(`SELECT setval('tqm_text_entries_id_seq', 0)`),
         trx.raw(`SELECT setval('tqm_file_uploads_id_seq', 0)`),
@@ -1061,8 +1059,6 @@ function cleanTables(db) {
         trx.raw(`SELECT setval('tqm_gen_questions_id_seq', 0)`),
         trx.raw(`SELECT setval('tqm_user_questions_id_seq', 0)`),
         trx.raw(`SELECT setval('tqm_relationship_request_id_seq', 0)`),
-        trx.raw(`SELECT setval('tqm_user_relationship_id_seq', 0)`),
-
 
       ])
     )

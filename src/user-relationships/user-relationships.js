@@ -72,39 +72,24 @@ userRelationships
   userRelationships
     .route('/user-relationship')
     .all(requireAuth)
-    .post(jsonBodyParser, (req, res, next) => {
-      const {
-        user_id,
-        user_first_name,
-        user_last_name,
-        user_email,
-        partner_id,
-        partner_first_name,
-        partner_last_name,
-        partner_email
-      } = req.body
-
-
-      const id = uuidv4()
+    .put(jsonBodyParser, (req, res, next) => {
+      const { user_id } = req.user
+      const { partner_id } = req.body
+      const relId = uuidv4()
+  
       const relationship = {
-        relationship_id: id,
-        user_id,
-        user_first_name,
-        user_last_name,
-        user_email,
-        partner_id,
-        partner_first_name,
-        partner_last_name,
-        partner_email
+        partner1: user_id,
+        partner2: partner_id,
+        relationship_id: relId
       }
-      
-      UserRelServices.postRelationship(req.app.get('db'), relationship)
-        .then(postedRel =>
+  
+      UserRelServices.updateRelationship(req.app.get('db'), relationship)
+        .then(row => {
+          console.log(row)
           res
-            .status(201)
-            .end()
-            )
-            .catch(next)
+            .status(204)
+            .json(row)
+        })
     })
 
   module.exports = userRelationships

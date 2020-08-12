@@ -81,6 +81,11 @@ const QuestionServices = {
       )
       .where('qs.user_id', user_id)
 
+  },
+
+  getAnswersByRel(db, user_id) {
+    return db
+      .from('')
   }
 
 }
