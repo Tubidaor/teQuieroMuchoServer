@@ -6,11 +6,11 @@ const supertest = require('supertest');
 
 
 
-describe('Question Endpoints', () => {
+describe.only('Question Endpoints', () => {
 
   let db
 
-  const { userQuestions, genQuestions, testUsers, testAnswers } = helpers.retrieveData()
+  const {genQuestions, testUsers, testAnswers } = helpers.retrieveData()
 
   before('Create knex Instance', () => {
     db = knex({
@@ -29,11 +29,16 @@ describe('Question Endpoints', () => {
   beforeEach('Insert data into tables', () => {
     helpers.seedUsers(db, testUsers)
     helpers.seedGenQuestions(db, genQuestions)
-    helpers.seedUserQuestions(db, userQuestions)
     helpers.seedQuestionAnswers(db, testAnswers)
   })
 
   describe('Questionare answer posts', () => {
+
+    beforeEach('Insert data into tables', () => {
+      helpers.seedUsers(db, testUsers)
+      helpers.seedGenQuestions(db, genQuestions)
+      helpers.seedQuestionAnswers(db, testAnswers)
+    })
     
     const reqFields = ['question_id', 'joy', 'disgust', 'sadness', 'anger', 'fear', 'mood']
     reqFields.forEach(field => {
@@ -92,8 +97,14 @@ describe('Question Endpoints', () => {
 
     describe('General Questions Endpoint', () => {
 
-      it('1 Responds: 200, and questions for opening section', () => {
+      beforeEach('Insert data into tables', () => {
+        helpers.seedUsers(db, testUsers)
+        helpers.seedGenQuestions(db, genQuestions)
+        helpers.seedQuestionAnswers(db, testAnswers)
+      })
 
+      it('1 Responds: 200, and questions for opening section', () => {
+        
         return supertest(app)
           .get('/api/general-questions')
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
@@ -135,6 +146,12 @@ describe('Question Endpoints', () => {
 
     describe('User questions endpoint', () => {
 
+      beforeEach('Insert data into tables', () => {
+        helpers.seedUsers(db, testUsers)
+        helpers.seedGenQuestions(db, genQuestions)
+        helpers.seedQuestionAnswers(db, testAnswers)
+      })
+
       it('1 Responds: 200 and all entries by user', () => {
 
         const user = testUsers[0].user_id
@@ -174,7 +191,7 @@ describe('Question Endpoints', () => {
             })
         })
 
-        it('2 Responds: 201 and question submitted', () => {
+        it.only('2 Responds: 201 and question submitted', () => {
 
           const newQuestion = {
               question: 'What will it take?',

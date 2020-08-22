@@ -11,8 +11,6 @@ audioRouter
   .get((req, res, next) => {
     const { user_id } = req.user
 
-    console.log(req.user)
-
     function getAllAudioFilesByUser(db, user_id) {
       return db
         .from('tqm_file_uploads')
@@ -23,7 +21,7 @@ audioRouter
 
     getAllAudioFilesByUser(req.app.get('db'), user_id)
       .then(audioFiles => {
-        console.log(audioFiles)
+    
         res 
           .status(200)
           .send(audioFiles)
@@ -44,9 +42,9 @@ audioRouter
         .first()
     }
     const findAudioPath = await findAudio(req.app.get('db'), entry_id )
-    console.log(req.user)
+  
     const filePath = path.join(process.cwd(), findAudioPath.file_path)
-    console.log(filePath)
+    
     const stat = fs.statSync(filePath)
     const fileSize = stat.size
     const range = req.headers.range

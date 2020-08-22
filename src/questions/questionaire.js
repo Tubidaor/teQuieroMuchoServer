@@ -15,7 +15,7 @@ questionaireRouter
     const { question_id, joy, disgust, sadness, anger, fear, mood } = req.body
     const id = uuidv4()
     const scores = ['question_id', 'joy', 'disgust', 'sadness', 'anger', 'fear', 'mood']
-    console.log(req.body)
+    
     for( const field of scores )
       if(!req.body.hasOwnProperty(field)) {
         return res
@@ -55,7 +55,7 @@ questionaireRouter
 
     QuestionServices.getAnswersByUser(req.app.get('db'), user_id)
       .then(answers => {
-        console.log(answers)
+        
         res
           .status(200)
           .json(answers)

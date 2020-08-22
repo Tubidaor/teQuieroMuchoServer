@@ -33,7 +33,7 @@ describe('Audio endpoint', () => {
       .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
       .expect(200)
       .expect(res => {
-        console.log(res.body)
+        
         const row = res.body[0]
         expect(res.body.length).to.eql(1)
         expect(row).to.have.property('id')

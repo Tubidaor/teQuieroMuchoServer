@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS tqm_questionaire, tqm_gen_questions, tqm_user_questions;

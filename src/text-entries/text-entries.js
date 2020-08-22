@@ -16,7 +16,7 @@ textEntryRouter
     
         TextServices.getTextEntries(req.app.get('db'), user_id)
           .then(textEntries => {
-            console.log('these are the text entrie', textEntries)
+            
             res
               .status(200)
               .json(textEntries.map(entry => TextServices.serializeEntry(entry)))
@@ -29,7 +29,7 @@ textEntryRouter
     const user_id = req.user.user_id
     try {
       const entry = await TextServices.getTextEntries(req.app.get('db'), user_id)
-      console.log(entry)
+      
       if(!entry || entry.length === 0)
         return res.status(404).json({
           error: 'entry does not exist'
@@ -47,7 +47,7 @@ textEntryRouter
     .route('/text-entry')
     .all(requireAuth)
     .post(jsonBodyParser, (req, res, next) => {
-      console.log(req.body)
+      
       const  { user_id } = req.user
       const { text } = req.body
       const id = uuidv4()
@@ -62,7 +62,7 @@ textEntryRouter
         newEntry
       )
       .then(entry => {
-        console.log(entry)
+        
         res
           .status(201)
           .json(TextServices.serializeEntry(entry))

@@ -37,7 +37,7 @@ fileUploadsRouter
   // .all(requireAuth)
   .post(jsonBodyParser, (req, res, next ) => {
 
-    console.log(req.body)
+    
     upload(req, res, (err) => {
       if(err instanceof multer.MulterError) {
         return res.json({error: err})

@@ -10,11 +10,12 @@ userRelationships
   .all( requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
     const { user_id, first_name, last_name, email } = req.user
-    const { partner_email } = req.body
+    const { partner_email, anniversary } = req.body
     const user_user_id = user_id
     const user_first_name = first_name
     const user_last_name = last_name
     const user_email = email
+    const rel_anniversary = anniversary
 
     UserRelServices.findPartner(req.app.get('db'), partner_email)
       .then(partner => {
@@ -27,14 +28,15 @@ userRelationships
           partner_id: user_id,
           partner_first_name: first_name,
           partner_last_name: last_name,
-          partner_email: email
+          partner_email: email,
+          anniversary: rel_anniversary
         }
         
         return UserRelServices.postPartnerRequest(req.app.get('db'), relationshipBody)
         
       })
       .then(partner => {
-        console.log(partner)
+        
         res
           .status(201)
           .send(partner)
@@ -45,7 +47,7 @@ userRelationships
     const {user_id} = req.user
     UserRelServices.verifyRequest(req.app.get('db'), user_id)
       .then(relationship => {
-        console.log(relationship)
+        
         res
           .status(200)
           .json(relationship)
@@ -56,11 +58,9 @@ userRelationships
     const {user_id} = req.user
     UserRelServices.deleteRequest(req.app.get('db'), user_id)
       .then(row => {
-        console.log(row)
       
         UserRelServices.verifyRequest(req.app.get('db'), user_id )
           .then(del => {
-            console.log('this got deleted', del)
             res
               .status(204)
               .end()
@@ -74,20 +74,21 @@ userRelationships
     .all(requireAuth)
     .put(jsonBodyParser, (req, res, next) => {
       const { user_id } = req.user
-      const { partner_id } = req.body
+      const { partner_id, anniversary } = req.body
       const relId = uuidv4()
   
       const relationship = {
-        partner1: user_id,
-        partner2: partner_id,
-        relationship_id: relId
+        relationship_id: relId,
+        user_id,
+        partner_id,
+        anniversary
       }
   
-      UserRelServices.updateRelationship(req.app.get('db'), relationship)
+      UserRelServices.postRelationship(req.app.get('db'), relationship)
         .then(row => {
-          console.log(row)
+
           res
-            .status(204)
+            .status(201)
             .json(row)
         })
     })

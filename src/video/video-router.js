@@ -24,7 +24,7 @@ videoRouter
       user_id
     )
     .then(videos => {
-      console.log(videos)
+
       res
         .status(200)
         .send(videos)
@@ -45,9 +45,9 @@ videoRouter
           .first()
       }
       const findVideoPath = await findVideo(req.app.get('db'), entry_id )
-      console.log(findVideoPath.file_path)
+      
       const filePath = path.join(process.cwd(), findVideoPath.file_path)
-      console.log(filePath)
+      
       const stat = fs.statSync(filePath)
       const fileSize = stat.size
       const range = req.headers.range

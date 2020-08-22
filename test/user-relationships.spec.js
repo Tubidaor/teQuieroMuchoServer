@@ -30,10 +30,10 @@ describe('user relationship test', () => {
 
   
 
-  it('1 responds: 201 and posts user relation', () => {
+  it('1 responds: 201 and posts user relationship request', () => {
     const reqBody = {
-      user_id: testUser.user_id,
       partner_email: testPartner.email,
+      anniversary: testRelationships[0].anniversary
     }
 
     return supertest(app)
@@ -58,9 +58,20 @@ describe('user relationship test', () => {
         .get('/api/user-relationship-request')
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
         .expect(200)
-        .expect(res => 
-          expect(res.body).to.eql(testRelationships[0])
-          )
+        .expect(res => {
+          const row = res.body
+          const rel = testRelationships[0]
+          expect(row.user_id).to.eql(rel.user_id)
+          expect(row.first_name).to.eql(rel.first_name)
+          expect(row.last_name).to.eql(rel.last_name)
+          expect(row.email).to.eql(rel.email)
+          expect(row.partner_id).to.eql(rel.partner_id)
+          expect(row.partner_first_name).to.eql(rel.partner_first_name)
+          expect(row.partner_last_name).to.eql(rel.partner_last_name)
+          expect(row.partner_email).to.eql(rel.partner_email)
+          expect(row).to.have.property('anniversary')
+          
+        })
       })
 
     it('3 responds with status 204 and deletes request', () => {
@@ -77,16 +88,17 @@ describe('user relationship test', () => {
         helpers.seedRelationshipReq(db, testRelationships)
       )
       
-      it.only('4 responds: 201 and relationship data', () => {
+      it('4 responds: 201 and relationship data', () => {
       const relationshipReqBody = {
-        partner_id: testPartner.user_id,
+        partner_id: testRelationships[0].user_id,
+        anniversary: testRelationships[0].anniversary
       }
 
       return supertest(app)
         .put('/api/user-relationship')
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
         .send(relationshipReqBody)
-        .expect(204)
+        .expect(201)
         
       })
     })

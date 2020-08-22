@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS tqm_users;
+DROP TABLE IF EXISTS tqm_users cascade;

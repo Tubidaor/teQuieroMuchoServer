@@ -50,11 +50,10 @@ const UserRelServices = {
       .where({partner_id})
       .del()
   },
-  updateRelationship(db, relationship) {
-    return db('tqm_users')
-      .update({relationship_id: relationship.relationship_id})
-      .where({user_id: relationship.partner1})
-      .andWhere({user_id: relationship.partner2})
+  postRelationship(db, relationship) {
+    return db
+      .insert(relationship)
+      .into('tqm_user_relationship')
       .returning('*')
       .then(([rel]) => rel)
   }

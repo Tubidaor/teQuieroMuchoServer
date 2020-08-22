@@ -40,23 +40,25 @@ const QuestionServices = {
     return db
       .from('tqm_gen_questions')
       .select('*')
+      .whereNot('section', 'User')
       
   },
 
   getUserQuestions(db, user_id) {
     return db
-      .from('tqm_user_questions')
+      .from('tqm_gen_questions')
       .select('*')
       .where({user_id})
+      .andWhere('section', 'User')
   },
 
   postUserQuestions(db, newQuestion) {
     return db
-      .into('tqm_user_questions')
+      .into('tqm_gen_questions')
       .insert(newQuestion)
       .returning('*')
       .then(([question]) => question)
-      .then(question => QuestionServices.getQuestionById(db, 'tqm_user_questions', question.question_id))
+      .then(question => QuestionServices.getQuestionById(db, 'tqm_gen_questions', question.question_id))
   },
 
   getAnswersByUser(db, user_id) {

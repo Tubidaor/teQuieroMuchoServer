@@ -23,17 +23,16 @@ describe('Protected journal entry endpoints', () => {
   afterEach('clean up', () => helpers.cleanTables(db))
 
   beforeEach('insert data into tables', () => {
+    helpers.seedUsers(
+      db,
+      testUsers
+    )
     helpers.seedTextTables(
       db,
       textEntries
     )
 
-    helpers.seedUsers(
-      db,
-      testUsers
-    )
-    }
-    )
+    })
 
   protectedEndpoints = [
     {
@@ -96,8 +95,7 @@ describe('Protected journal entry endpoints', () => {
   })
   it('5 responds: 404, entry not found', () => {
     const user = testUsers[1]
-    const user_id = user.user_id
-    console.log(user)
+    
     return supertest(app)
       .get(`/api/text-entry`)
       .set('Authorization', helpers.makeAuthHeader(user))
@@ -116,6 +114,9 @@ describe('Protected journal entry endpoints', () => {
       .set('Authorization', helpers.makeAuthHeader(user))
       .send(newEntry)
       .expect(201)
+      .expect(res => 
+        expect(res.body.text).to.eql(newEntry.text)
+      )
     
   })
 

@@ -34,6 +34,7 @@ userQsRouter
     const { user_id } = req.user
     const { question, category} = req.body
     const id = uuidv4()
+    const section = 'User'
 
     const requiredFields = ['question', 'category']
 
@@ -48,7 +49,8 @@ userQsRouter
       question_id: id,
       question,
       category,
-      user_id,
+      section,
+      user_id
     }
 
     QuestionServices.postUserQuestions(req.app.get('db'), newQuestion)
