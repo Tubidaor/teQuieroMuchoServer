@@ -18,6 +18,15 @@ const QuestionServices = {
       .first()
   },
 
+  getRelId(db, user_id) {
+    return db
+      .from('tqm_user_relationship')
+      .select('relationship_id')
+      .where({user_id})
+      .orWhere('partner_id', user_id)
+      .first()
+  },
+  
   postGenQuestion(db, newGenQuestion) {
     return db
       .into('tqm_gen_questions')
@@ -42,14 +51,6 @@ const QuestionServices = {
       .select('*')
       .whereNot('section', 'User')
       
-  },
-
-  getUserQuestions(db, user_id) {
-    return db
-      .from('tqm_gen_questions')
-      .select('*')
-      .where({user_id})
-      .andWhere('section', 'User')
   },
 
   postUserQuestions(db, newQuestion) {
@@ -85,9 +86,27 @@ const QuestionServices = {
 
   },
 
-  getAnswersByRel(db, user_id) {
+  getAnswersByRel(db, relationship_id) {
     return db
-      .from('')
+      .from('tqm_questionaire as qs')
+      .select(
+        'qs.user_id',
+        'qs.joy',
+        'qs.disgust',
+        'qs.sadness',
+        'qs.anger',
+        'qs.fear',
+        'qs.mood',
+        'qs.date_created',
+        'gen.question',
+        'gen.category',
+        'gen.section'
+      )
+      .rightJoin('tqm_gen_questions as gen',
+      'qs.question_id',
+      'gen.question_id'
+      )
+      .where('qs.user_id', user_id)
   }
 
 }

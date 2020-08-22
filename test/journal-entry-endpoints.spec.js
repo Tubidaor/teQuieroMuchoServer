@@ -93,7 +93,7 @@ describe('Protected journal entry endpoints', () => {
         expect(res.body.length).to.eql(3)
       })
   })
-  it('5 responds: 404, entry not found', () => {
+  it.only('5 responds: 404, entry not found', () => {
     const user = testUsers[1]
     
     return supertest(app)
@@ -103,7 +103,7 @@ describe('Protected journal entry endpoints', () => {
       
   })
   
-  it('6 responds: 201 and entry created', () => {
+  it.only('6 responds: 201 and entry created', () => {
     const user = testUsers[0]
     
     const newEntry = {

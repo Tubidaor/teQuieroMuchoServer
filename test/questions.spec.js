@@ -2,11 +2,12 @@ const knex = require('knex');
 const app = require('../src/app');
 const helpers = require('./test-helpers');
 const supertest = require('supertest');
+const { expect } = require('chai');
 
 
 
 
-describe.only('Question Endpoints', () => {
+describe('Question Endpoints', () => {
 
   let db
 
@@ -28,17 +29,17 @@ describe.only('Question Endpoints', () => {
 
   beforeEach('Insert data into tables', () => {
     helpers.seedUsers(db, testUsers)
-    helpers.seedGenQuestions(db, genQuestions)
-    helpers.seedQuestionAnswers(db, testAnswers)
+    // helpers.seedGenQuestions(db, genQuestions)
+    // helpers.seedQuestionAnswers(db, testAnswers)
   })
 
   describe('Questionare answer posts', () => {
 
-    beforeEach('Insert data into tables', () => {
-      helpers.seedUsers(db, testUsers)
-      helpers.seedGenQuestions(db, genQuestions)
-      helpers.seedQuestionAnswers(db, testAnswers)
-    })
+    // beforeEach('Insert data into tables', () => {
+    //   helpers.seedUsers(db, testUsers)
+    //   helpers.seedGenQuestions(db, genQuestions)
+    //   helpers.seedQuestionAnswers(db, testAnswers)
+    // })
     
     const reqFields = ['question_id', 'joy', 'disgust', 'sadness', 'anger', 'fear', 'mood']
     reqFields.forEach(field => {
@@ -90,6 +91,7 @@ describe.only('Question Endpoints', () => {
           expect(res.body.anger).to.eql(qAttemptBody.anger)
           expect(res.body.fear).to.eql(qAttemptBody.fear)
           expect(res.body.mood).to.eql(qAttemptBody.mood)
+          expect(res.body).to.have.property('relationship_id')
 
         })
 
@@ -146,32 +148,12 @@ describe.only('Question Endpoints', () => {
 
     describe('User questions endpoint', () => {
 
-      beforeEach('Insert data into tables', () => {
-        helpers.seedUsers(db, testUsers)
-        helpers.seedGenQuestions(db, genQuestions)
-        helpers.seedQuestionAnswers(db, testAnswers)
-      })
-
-      it('1 Responds: 200 and all entries by user', () => {
-
-        const user = testUsers[0].user_id
-
-        return supertest(app)
-          .get('/api/user-questions')
-          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .expect(200)
-          .expect(res => {
-            const row = res.body[0]
-            expect(res.body.length).to.eql(6)
-            expect(row).to.have.property('id')
-            expect(row).to.have.property('question_id')
-            expect(row).to.have.property('question')
-            expect(row).to.have.property('user_id')
-            expect(row).to.have.property('category')
-            expect(row).to.have.property('date_created')
-          })
-      })
-
+      // beforeEach('Insert data into tables', () => {
+      //   helpers.seedUsers(db, testUsers)
+      //   helpers.seedGenQuestions(db, genQuestions)
+      //   helpers.seedQuestionAnswers(db, testAnswers)
+      // })  
+      
       const requiredFields = ['question', 'category']
 
       requiredFields.forEach(field => {
@@ -191,7 +173,7 @@ describe.only('Question Endpoints', () => {
             })
         })
 
-        it.only('2 Responds: 201 and question submitted', () => {
+        it('2 Responds: 201 and question submitted', () => {
 
           const newQuestion = {
               question: 'What will it take?',

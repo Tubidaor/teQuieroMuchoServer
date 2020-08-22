@@ -30,4 +30,8 @@ VALUES
   ('6775cc23-9349-4f79-8f70-6d4d1f655cf5', 'How do you feel about your friendship with partner?', 'Friendship', 'Relationship'),
   ('2e6f62f6-a780-4315-995a-0c2f2809e830', 'How do you feel about parenting with partner?', 'Parenting', 'Relationship');
 
+  INSERT INTO tqm_user_relationship (id, relationship_id, user_id, partner_id, anniversary, date_created)
+  VALUES
+    ('1', 'f94cb634-474b-440a-8390-d58e784bde0e', '73b8bb71-c339-4029-bc70-6204928aa77b', '13c0713a-ec31-4378-8aad-37a4c9f4a304', '5/04/2012', '8/21/2020' );
+
 COMMIT;

@@ -9,26 +9,6 @@ const { v4: uuidv4 } = require('uuid');
 userQsRouter
   .route('/user-questions')
   .all(requireAuth)
-  .get((req, res, next) => {
-
-    const {user_id} = req.user
-
-    QuestionServices.getUserQuestions(
-      req.app.get('db'),
-      user_id
-    )
-    .then(questions => {
-      
-      res
-        .status(200)
-        .send(questions)
-    })
-    .catch(next)
-  })
-
-userQsRouter
-  .route('/user-questions')
-  .all(requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
     
     const { user_id } = req.user
