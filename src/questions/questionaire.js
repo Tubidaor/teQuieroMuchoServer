@@ -54,7 +54,7 @@ questionaireRouter
   .all(requireAuth)
   .get((req, res, next) => {
     const { user_id } = req.user
-
+    // const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
     QuestionServices.getAnswersByUser(req.app.get('db'), user_id)
       .then(answers => {
         
@@ -67,11 +67,13 @@ questionaireRouter
 
   questionaireRouter
     .route('/rel-answers')
-    .all(requireAuth)
+    // .all(requireAuth)
     .get((req, res, next) => {
-      const { user_id } = req.user
-
-      QuestionServices.getAnswersByRel(req.app.get('db'), user_id)
+      // const { user_id } = req.user
+    const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
+    const relationship_id = QuestionServices.getRelId(req.app.get('db'), user_id)
+  
+      QuestionServices.getAnswersByRel(req.app.get('db'), user_id, relationship_id)
         .then(answers => {
           res
             .status(200)

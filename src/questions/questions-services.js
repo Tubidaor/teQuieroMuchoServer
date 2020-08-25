@@ -26,7 +26,7 @@ const QuestionServices = {
       .orWhere('partner_id', user_id)
       .first()
   },
-  
+
   postGenQuestion(db, newGenQuestion) {
     return db
       .into('tqm_gen_questions')
@@ -83,10 +83,10 @@ const QuestionServices = {
       'gen.question_id'
       )
       .where('qs.user_id', user_id)
-
+      .whereNot('gen.section', 'Relationship')
   },
 
-  getAnswersByRel(db, relationship_id) {
+  getAnswersByRel(db, user_id, relationship_id) {
     return db
       .from('tqm_questionaire as qs')
       .select(
@@ -106,7 +106,9 @@ const QuestionServices = {
       'qs.question_id',
       'gen.question_id'
       )
-      .where('qs.user_id', user_id)
+      .where('qs.relationship_id', relationship_id)
+      .andWhere('qs.user_id', user_id)
+      .andWhere('gen.section', 'Relationship')
   }
 
 }

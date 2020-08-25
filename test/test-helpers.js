@@ -213,7 +213,7 @@ function makeGenQuestions() {
       question_id: 'f7464320-6c7b-4654-a190-4f6f30395ba8',
       question: `How do you feel about your sex life with partner?`,
       category: 'Sex',
-      section: 'User',
+      section: 'Relationship',
       user_id: '73b8bb71-c339-4029-bc70-6204928aa77b'
     },
     {
@@ -221,7 +221,7 @@ function makeGenQuestions() {
       question_id: '04623f9d-d0d6-4f81-9d7b-336938edba51',
       question: `How do you feel about your emotional connection with partner?`,
       category: 'Friendship',
-      section: 'User',
+      section: 'Relationship',
       user_id: '73b8bb71-c339-4029-bc70-6204928aa77b'
       
     }
@@ -366,6 +366,18 @@ function makeTestRelationships() {
   ]
 }
 
+function makeUserRelationship() {
+  return [
+    {
+      id: '1',
+      relationship_id: 'f94cb634-474b-440a-8390-d58e784bde0e',
+      user_id: '73b8bb71-c339-4029-bc70-6204928aa77b',
+      partner_id: '13c0713a-ec31-4378-8aad-37a4c9f4a304',
+      anniversary: '5/04/2012',
+      date_created: '8/21/2020'
+    }
+  ]
+}
 function makeQuestionAnswers() {
   return [
         {
@@ -385,6 +397,7 @@ function makeQuestionAnswers() {
           "id" : 2,
           "entry_id" : "40ac5d26-4954-46e4-af0c-14b03d216167",
           "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+          "relationship_id": "f94cb634-474b-440a-8390-d58e784bde0e",
           "question_id" : "4b565474-112b-462a-abbc-17cceaf34e9c",
           "joy" : 100,
           "disgust" : 0,
@@ -398,6 +411,7 @@ function makeQuestionAnswers() {
           "id" : 3,
           "entry_id" : "4994b03a-59a2-4319-9e00-359f1a385a8e",
           "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+          "relationship_id": "f94cb634-474b-440a-8390-d58e784bde0e",
           "question_id" : "6918450a-acca-478b-a890-0659ac50c839",
           "joy" : 100,
           "disgust" : 0,
@@ -411,6 +425,7 @@ function makeQuestionAnswers() {
           "id" : 4,
           "entry_id" : "8971cf16-36af-4300-8dab-ff46cc1bae64",
           "user_id" : "73b8bb71-c339-4029-bc70-6204928aa77b",
+          "relationship_id": "f94cb634-474b-440a-8390-d58e784bde0e",
           "question_id" : "b8dc039d-5438-4df6-828b-61418a1f70dd",
           "joy" : 100,
           "disgust" : 0,
@@ -1073,6 +1088,7 @@ function makeQuestionAnswers() {
   ]
 }
 
+
 function retrieveData() {
   const testUsers = makeUsersArray()
   const textEntries = makeTextEntries()
@@ -1081,6 +1097,7 @@ function retrieveData() {
   const fileUploads = makeFileUploads()
   const testRelationships = makeTestRelationships()
   const testAnswers = makeQuestionAnswers()
+  const userRelationship = makeUserRelationship ()
 
   return {
     testUsers,
@@ -1089,7 +1106,8 @@ function retrieveData() {
     userQuestions,
     fileUploads,
     testRelationships,
-    testAnswers
+    testAnswers,
+    userRelationship
   }
 }
 
@@ -1203,6 +1221,18 @@ function seedRelationshipReq(db, testRelationships) {
     })
 }
 
+function seedUserRelationship(db, relationship) {
+  return db
+    .into('tqm_user_relationship')
+    .insert(relationship)
+    .then(() => {
+      db.raw(
+        `SELECT setval('tqm_user_relationship_id_seq', ?)`,
+        [relationship[relationship.length -1].id],
+      )
+    })
+}
+
 function seedQuestionAnswers(db, testAnswers) {
   return db
     .into('tqm_questionaire')
@@ -1237,5 +1267,6 @@ module.exports = {
   seedUserQuestions,
   seedFileUploads,
   seedRelationshipReq,
-  seedQuestionAnswers
+  seedQuestionAnswers,
+  seedUserRelationship
 }

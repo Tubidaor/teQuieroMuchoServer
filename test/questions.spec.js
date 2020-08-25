@@ -3,6 +3,7 @@ const app = require('../src/app');
 const helpers = require('./test-helpers');
 const supertest = require('supertest');
 const { expect } = require('chai');
+const userRelationships = require('../src/user-relationships/user-relationships');
 
 
 
@@ -11,7 +12,7 @@ describe('Question Endpoints', () => {
 
   let db
 
-  const {genQuestions, testUsers, testAnswers } = helpers.retrieveData()
+  const {genQuestions, testUsers, testAnswers, userRelationship } = helpers.retrieveData()
 
   before('Create knex Instance', () => {
     db = knex({
@@ -29,8 +30,10 @@ describe('Question Endpoints', () => {
 
   beforeEach('Insert data into tables', () => {
     helpers.seedUsers(db, testUsers)
-    // helpers.seedGenQuestions(db, genQuestions)
-    // helpers.seedQuestionAnswers(db, testAnswers)
+    helpers.seedUserRelationship(db, userRelationship )
+    helpers.seedGenQuestions(db, genQuestions)
+    helpers.seedQuestionAnswers(db, testAnswers)
+
   })
 
   describe('Questionare answer posts', () => {
@@ -197,7 +200,7 @@ describe('Question Endpoints', () => {
             })
       })
 
-      it('3 responds: 200 and all of users answers', () => {
+      it.only('3 responds: 200 and all of users answers', () => {
 
         return supertest(app)
           .get('/api/user-answers')
@@ -218,9 +221,34 @@ describe('Question Endpoints', () => {
             expect(row).to.have.property('question')
             expect(row).to.have.property('section')
             expect(row.user_id).to.eql(testUsers[0].user_id)
-            expect(res.body.length).to.eql(54)
+            expect(res.body.length).to.eql(44)
           })
       })
-    })
+
+      it('4 responds: 200 and relationship answers', () => {
+
+        return supertest(app)
+          .get('/api/rel-answers')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .expect(200)
+          .expect(res => {
+            const row = res.body[0]
+            
+            expect(row).to.have.property('user_id')
+            expect(row).to.have.property('joy')
+            expect(row).to.have.property('disgust')
+            expect(row).to.have.property('sadness')
+            expect(row).to.have.property('anger')
+            expect(row).to.have.property('fear')
+            expect(row).to.have.property('mood')
+            expect(row).to.have.property('date_created')
+            expect(row).to.have.property('category')
+            expect(row).to.have.property('question')
+            expect(row).to.have.property('section')
+            expect(row.user_id).to.eql(testUsers[0].user_id)
+            expect(res.body.length).to.eql(3)
+           })
+        })
+      })
   })
 })
