@@ -84,6 +84,7 @@ const QuestionServices = {
       )
       .where('qs.user_id', user_id)
       .whereNot('gen.section', 'Relationship')
+      .orderBy('qs.date_created', 'asc')
   },
 
   getAnswersByRel(db, user_id, relationship_id) {
@@ -109,6 +110,7 @@ const QuestionServices = {
       .where('qs.relationship_id', relationship_id)
       .andWhere('qs.user_id', user_id)
       .andWhere('gen.section', 'Relationship')
+      .orderBy('qs.date_created', 'asc')
   }
 
 }
