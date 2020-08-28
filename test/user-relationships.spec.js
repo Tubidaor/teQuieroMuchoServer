@@ -88,7 +88,7 @@ describe('user relationship test', () => {
         helpers.seedRelationshipReq(db, testRelationships)
       )
       
-      it('4 responds: 201 and relationship data', () => {
+      it.only('4 responds: 201 and relationship data', () => {
       const relationshipReqBody = {
         partner_id: testRelationships[0].user_id,
         anniversary: testRelationships[0].anniversary

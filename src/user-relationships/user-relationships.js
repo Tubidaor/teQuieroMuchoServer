@@ -7,7 +7,7 @@ const { v4:uuidv4 } = require('uuid')
 
 userRelationships
   .route('/user-relationship-request')
-  .all( requireAuth)
+  .all(requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
     const { user_id, first_name, last_name, email } = req.user
     const { partner_email, anniversary } = req.body
@@ -16,7 +16,7 @@ userRelationships
     const user_last_name = last_name
     const user_email = email
     const rel_anniversary = anniversary
-
+    //need to add check and rejection if user is already requested 
     UserRelServices.findPartner(req.app.get('db'), partner_email)
       .then(partner => {
         const { user_id, first_name, last_name, email } = partner
@@ -72,15 +72,15 @@ userRelationships
   userRelationships
     .route('/user-relationship')
     .all(requireAuth)
-    .put(jsonBodyParser, (req, res, next) => {
+    .post(jsonBodyParser, (req, res, next) => {
       const { user_id } = req.user
       const { partner_id, anniversary } = req.body
       const relId = uuidv4()
-  
+      console.log(req.body)
       const relationship = {
         relationship_id: relId,
-        user_id,
-        partner_id,
+        user_id: partner_id,
+        partner_id: user_id,
         anniversary
       }
   
@@ -91,6 +91,7 @@ userRelationships
             .status(201)
             .json(row)
         })
+        .catch(next)
     })
 
   module.exports = userRelationships
