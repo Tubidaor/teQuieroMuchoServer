@@ -111,8 +111,56 @@ const QuestionServices = {
       .andWhere('qs.user_id', user_id)
       .andWhere('gen.section', 'Relationship')
       .orderBy('qs.date_created', 'asc')
-  }
+  },
 
+  getAnswerAvgByRel(db, relationship_id) {
+    return db
+      .from('tqm_questionaire as qs')
+      // .select('qs.question_id')
+      // .avg('sadness as avgSad')
+      // .avg('joy as avgJoy')
+      // .avg('disgust as avgDis')
+      // .avg('fear as avgFear')
+      // .avg('anger as avgAnger')
+      // .avg('mood as avgOverall')
+      .select(
+        'qs.user_id',
+        'us.first_name',
+        'us.last_name',
+        'gq.question',
+        db.raw(`json_build_object(
+        'avgJoy', avg(qs.joy),
+        'avgDis', avg(qs.disgust),
+        'avgSad', avg(qs.sadness),
+        'avgFear', avg(qs.fear),
+        'avgAnger', avg(qs.anger)
+      ) AS "scores"`
+      )
+    )
+      // .select(
+      //   'us.first_name',
+      //   'us.last_name'
+      // )
+      // .select(
+        // db.raw(`AVG('joy')`
+        // )
+        // )
+      .rightJoin('tqm_users as us',
+        'qs.user_id',
+        'us.user_id'
+      )
+      .rightJoin('tqm_gen_questions as gq',
+        'qs.question_id',
+        'gq.question_id'
+      )
+      .where({relationship_id})
+      .groupBy(
+        'qs.user_id',
+        'us.first_name',
+        'us.last_name',
+        'gq.question'
+      )
+  }
 }
 
 module.exports = QuestionServices
