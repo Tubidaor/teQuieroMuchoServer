@@ -116,35 +116,20 @@ const QuestionServices = {
   getAnswerAvgByRel(db, relationship_id) {
     return db
       .from('tqm_questionaire as qs')
-      // .select('qs.question_id')
-      // .avg('sadness as avgSad')
-      // .avg('joy as avgJoy')
-      // .avg('disgust as avgDis')
-      // .avg('fear as avgFear')
-      // .avg('anger as avgAnger')
-      // .avg('mood as avgOverall')
       .select(
-        'qs.user_id',
+        'gq.question',
         'us.first_name',
         'us.last_name',
-        'gq.question',
         db.raw(`json_build_object(
-        'avgJoy', avg(qs.joy),
-        'avgDis', avg(qs.disgust),
-        'avgSad', avg(qs.sadness),
-        'avgFear', avg(qs.fear),
-        'avgAnger', avg(qs.anger)
-      ) AS "scores"`
+          'avgJoy', round(avg(qs.joy), 0),
+          'avgDis', round(avg(qs.disgust), 0),
+          'avgSad', round(avg(qs.sadness), 0),
+          'avgFear', round(avg(qs.fear), 0),
+          'avgAnger', round(avg(qs.anger), 0),
+          'avgMood', round(avg(qs.mood), 0)
+          ) AS "scores"`
+        )
       )
-    )
-      // .select(
-      //   'us.first_name',
-      //   'us.last_name'
-      // )
-      // .select(
-        // db.raw(`AVG('joy')`
-        // )
-        // )
       .rightJoin('tqm_users as us',
         'qs.user_id',
         'us.user_id'
@@ -153,9 +138,9 @@ const QuestionServices = {
         'qs.question_id',
         'gq.question_id'
       )
-      .where({relationship_id})
+      .where({'qs.relationship_id': relationship_id })
+      .andWhere({'section': 'Relationship'})
       .groupBy(
-        'qs.user_id',
         'us.first_name',
         'us.last_name',
         'gq.question'
