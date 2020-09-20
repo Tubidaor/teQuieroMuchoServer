@@ -39,6 +39,7 @@ app.use('/api', videosRouter)
 app.use('/api', audioRouter)
 app.use('/api', imagesRouter)
 app.use('/api/uploads', express.static('uploads'))
+app.use('/api/uploads/static', express.static(path.join(process.cwd(), '/public', '/static')))
 app.use('/api', userRelationships)
 
 
