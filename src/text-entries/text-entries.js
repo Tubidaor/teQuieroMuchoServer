@@ -60,7 +60,7 @@ textEntryRouter
       if(text.length === 0) {
           return res
             .status(418)
-            .json({error: "The entry did not have any content."})
+            .json({error: "Please enter content."})
       }
 
       TextServices.postTextEntry(

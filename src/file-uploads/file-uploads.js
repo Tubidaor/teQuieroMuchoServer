@@ -37,12 +37,14 @@ fileUploadsRouter
   // .all(requireAuth)
   .post(jsonBodyParser, (req, res, next ) => {
     
-    
+    console.log( "1st" + req.files)
     upload(req, res, (err) => {
+      console.log("2nd" + !req.files)
       if(err instanceof multer.MulterError) {
         return res.json({error: err})
-      } else if (!req.files) {
-        return res.json({error: 'Please select files.'})
+      } else if (req.files.length === 0) {
+        console.log(req.files)
+        return res.status(404).json({error: 'Please select files.'})
       } 
 
       let newFileEntry = []
@@ -70,6 +72,7 @@ fileUploadsRouter
           .send(entry)
       })
     })
+    // .catch(next)
   })
 
 
