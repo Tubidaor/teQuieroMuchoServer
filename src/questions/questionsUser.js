@@ -12,12 +12,11 @@ userQsRouter
   .post(jsonBodyParser, (req, res, next) => {
     
     const { user_id } = req.user
-    const { question, category} = req.body
+    const { question, category, section} = req.body
     const id = uuidv4()
-    const section = 'User'
 
-    const requiredFields = ['question', 'category']
-
+    const requiredFields = ['question', 'category', 'section']
+    console.log(req.body)
     for(const field of requiredFields)
       if(!req.body[field]) {
         return res

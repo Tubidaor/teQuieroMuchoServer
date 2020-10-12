@@ -16,9 +16,24 @@ userRelationships
     const user_last_name = last_name
     const user_email = email
     const rel_anniversary = anniversary
-    //need to add check and rejection if user is already requested 
+    //need to add check and rejection if user is already requested
+    const requiredFields = ['partner_email', 'anniversary']
+
+    for(const field of requiredFields) {
+      if(!req.body[field]) {
+        return res
+          .status(418)
+          .json({error: `Field "${field}" is required.`})
+      }
+    }
     UserRelServices.findPartner(req.app.get('db'), partner_email)
       .then(partner => {
+        console.log(partner)
+        if(partner === undefined) {
+          return res
+            .status(418)
+            .json({error: 'User does not exist.'})
+        }
         const { user_id, first_name, last_name, email } = partner
         const relationshipBody = {
           user_id: user_user_id,
