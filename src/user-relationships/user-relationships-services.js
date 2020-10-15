@@ -19,9 +19,7 @@ const UserRelServices = {
       .into('tqm_relationship_request')
       .returning('*')
       .then(([partner]) => partner)
-      .then(partner =>
-        UserRelServices.verifyRequest(db, partner.partner_id)
-      )
+      
   },
   postRelationship(db, relationship) {
     return db
@@ -37,11 +35,12 @@ const UserRelServices = {
       .where({partner_id})
       .first()
   },
-  verifyRelationship(db, relationship_id) {
+  verifyRelationship(db, user_id) {
     return db
-      .from('tqm_relationship')
+      .from('tqm_user_relationship')
       .select('*')
-      .where({relationship_id})
+      .where({user_id})
+      .orWhere({'partner_id': user_id})
       .first()
   },
   deleteRequest(db, partner_id) {

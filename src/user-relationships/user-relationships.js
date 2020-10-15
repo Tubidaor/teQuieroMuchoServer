@@ -9,7 +9,7 @@ userRelationships
   .route('/user-relationship-request')
   .all(requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
-    const { user_id, first_name, last_name, email } = req.user
+    const { user_id, first_name, last_name, email} = req.user
     const { partner_email, anniversary } = req.body
     const user_user_id = user_id
     const user_first_name = first_name
@@ -47,6 +47,28 @@ userRelationships
           anniversary: rel_anniversary
         }
         
+        UserRelServices.verifyRequest(req.app.get('db'), user_id)
+          .then(requestsExists => {
+            if(requestsExists) {
+              return res
+                .status(418)
+                .json({error: "Request is already pending."})
+            }
+          }
+          )
+        
+        UserRelServices.verifyRelationship(req.app.get('db'), user_id)
+          .then(relationshipExists => {
+            console.log(relationshipExists)
+            if(relationshipExists) {
+              return res
+                .status(418)
+                .json({error: 'This email is already associated with a relationship.'})
+            }
+          })
+
+          
+
         return UserRelServices.postPartnerRequest(req.app.get('db'), relationshipBody)
         
       })
