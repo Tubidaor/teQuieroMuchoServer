@@ -1,4 +1,5 @@
 const QuestionServices = {
+
   postAnswer(db, newAnswer) {
     return db
       .into('tqm_questionaire')
@@ -7,9 +8,7 @@ const QuestionServices = {
       .then(([entry]) => entry)
       .then(entry =>
         QuestionServices.getAnswerById(db,'tqm_questionaire', entry.entry_id))
-      
   },
-
   getAnswerById(db, table, entry_id) {
     return db
       .from(table)
@@ -17,7 +16,6 @@ const QuestionServices = {
       .where({entry_id})
       .first()
   },
-
   getRelId(db, user_id) {
     return db
       .from('tqm_user_relationship')
@@ -26,7 +24,6 @@ const QuestionServices = {
       .orWhere('partner_id', user_id)
       .first()
   },
-
   postGenQuestion(db, newGenQuestion) {
     return db
       .into('tqm_gen_questions')
@@ -34,9 +31,10 @@ const QuestionServices = {
       .returning('*')
       .then(([question]) => question)
       .then(question =>
-        QuestionServices.getQuestionById(db, 'tqm_gen_questions', question.question_id))
+        QuestionServices
+          .getQuestionById(db, 'tqm_gen_questions', question.question_id)
+      )
   },
-
   getQuestionById(db, table, question_id) {
     return db
       .from(table)
@@ -44,24 +42,23 @@ const QuestionServices = {
       .where({question_id})
       .first()
   },
-
   getOpeningQuestions(db) {
     return db
       .from('tqm_gen_questions')
       .select('*')
       .whereNot('section', 'User')
-      
   },
-
   postUserQuestions(db, newQuestion) {
     return db
       .into('tqm_gen_questions')
       .insert(newQuestion)
       .returning('*')
       .then(([question]) => question)
-      .then(question => QuestionServices.getQuestionById(db, 'tqm_gen_questions', question.question_id))
+      .then(question =>
+        QuestionServices
+          .getQuestionById(db, 'tqm_gen_questions', question.question_id)
+      )
   },
-
   getAnswersByUser(db, user_id) {
     return db
       .from('tqm_questionaire as qs')
@@ -86,7 +83,6 @@ const QuestionServices = {
       .whereNot('gen.section', 'Relationship')
       .orderBy('qs.date_created', 'asc')
   },
-
   getAnswersByRel(db, user_id, relationship_id) {
     return db
       .from('tqm_questionaire as qs')
@@ -112,7 +108,6 @@ const QuestionServices = {
       .andWhere('gen.section', 'Relationship')
       .orderBy('qs.date_created', 'asc')
   },
-
   getAnswerAvgByRel(db, relationship_id) {
     return db
       .from('tqm_questionaire as qs')

@@ -9,7 +9,6 @@ function requireAuth(req, res, next) {
   } else {
     bearerToken = authToken.slice(7, authToken.length)
   }
-
   try {
     const payload = AuthServices.verifyJwt(bearerToken)
 
@@ -24,7 +23,6 @@ function requireAuth(req, res, next) {
       next()
     })
     .catch(err => {
-      
       next(err)
     })
   } catch(error) {

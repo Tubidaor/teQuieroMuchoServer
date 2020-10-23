@@ -1,6 +1,6 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('../config');
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const config = require('../config')
 
 const AuthServices = {
   getUserWithUserName(db, email) {
@@ -23,7 +23,6 @@ const AuthServices = {
       algorithms: ['HS256']
     })
   },
-
 }
 
 module.exports = AuthServices

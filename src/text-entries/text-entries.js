@@ -1,10 +1,9 @@
-const express = require('express');
-const textEntryRouter = express.Router();
-const jsonBodyParser = express.json();
-const { requireAuth } = require('../middleware/jwt-auth');
-const TextServices = require('./text-services');
+const express = require('express')
+const textEntryRouter = express.Router()
+const jsonBodyParser = express.json()
+const { requireAuth } = require('../middleware/jwt-auth')
+const TextServices = require('./text-services')
 const {v4: uuidv4} = require('uuid')
-
 
 textEntryRouter
   .route('/text-entry')
@@ -12,23 +11,21 @@ textEntryRouter
   .all(checkTheresEntries)
   .get((req, res, next) => {
     const  { user_id } = req.user
-    
-    
-        TextServices.getTextEntries(req.app.get('db'), user_id)
-          .then(textEntries => {
-            
-            res
-              .status(200)
-              .json(textEntries.map(entry => TextServices.serializeEntry(entry)))
+
+    TextServices.getTextEntries(req.app.get('db'), user_id)
+      .then(textEntries => {
+        res
+          .status(200)
+          .json(textEntries.map(entry => TextServices.serializeEntry(entry)))
       })
       .catch(next)
-
   })
 
   async function checkTheresEntries(req, res, next) {
     const user_id = req.user.user_id
     try {
-      const entry = await TextServices.getTextEntries(req.app.get('db'), user_id)
+      const entry = await TextServices
+        .getTextEntries(req.app.get('db'), user_id)
       
       if(!entry || entry.length === 0)
         return res.status(404).json({
@@ -36,7 +33,6 @@ textEntryRouter
         })
 
         res.entry = entry
-      
         next()
     } catch(error) {
       next(error)

@@ -3,7 +3,6 @@ const xss = require('xss')
 
 const TextServices = {
 
-
   getTextEntries(db, user_id) {
     return db
       .from('tqm_text_entries AS tEntry')
@@ -14,7 +13,6 @@ const TextServices = {
         'tEntry.date_created',
       )
       .where({'user_id': user_id})
-      // .first()
   },
   serializeEntry(entries) {
     return {
@@ -41,9 +39,6 @@ const TextServices = {
       .where({entry_id})
       .first()
   }
-
-
-
 }
 
 module.exports = TextServices

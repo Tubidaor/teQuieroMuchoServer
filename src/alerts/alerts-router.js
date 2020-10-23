@@ -1,7 +1,7 @@
 const express = require('express')
 const alertsRouter = express.Router()
 const jsonBodyParser = express.json()
-const { requireAuth } = require('../middleware/jwt-auth');
+const { requireAuth } = require('../middleware/jwt-auth')
 const {v4: uuidv4} = require('uuid')
 
 alertsRouter
@@ -17,6 +17,7 @@ alertsRouter
       issue: question,
       status: status
     }
+
     function postAlert(db, alert) {
       return db
         .insert(alert)
@@ -32,7 +33,6 @@ alertsRouter
           .json(con)
       )
       .catch(next)
-          
   })
   .get(async (req, res, next) => {
     const { user_id } = req.user
@@ -51,7 +51,6 @@ alertsRouter
         .from('tqm_alerts')
         .select("*")
         .where({relationship_id})
-        
     }
 
     const relationshipInfo = await getRelInfo(req.app.get('db'), user_id)
@@ -66,4 +65,4 @@ alertsRouter
             )
             .catch(next)
       })
-  })
+})

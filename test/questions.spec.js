@@ -1,18 +1,17 @@
-const knex = require('knex');
-const app = require('../src/app');
-const helpers = require('./test-helpers');
-const supertest = require('supertest');
-const { expect } = require('chai');
-const userRelationships = require('../src/user-relationships/user-relationships');
-
-
-
+const knex = require('knex')
+const app = require('../src/app')
+const helpers = require('./test-helpers')
+const supertest = require('supertest')
+const { expect } = require('chai')
 
 describe('Question Endpoints', () => {
-
   let db
-
-  const {genQuestions, testUsers, testAnswers, userRelationship } = helpers.retrieveData()
+  const {
+    genQuestions,
+    testUsers,
+    testAnswers,
+    userRelationship
+  } = helpers.retrieveData()
 
   before('Create knex Instance', () => {
     db = knex({
@@ -33,7 +32,6 @@ describe('Question Endpoints', () => {
     helpers.seedUserRelationship(db, userRelationship )
     helpers.seedGenQuestions(db, genQuestions)
     helpers.seedQuestionAnswers(db, testAnswers)
-
   })
 
   describe('Questionare answer posts', () => {
@@ -44,7 +42,15 @@ describe('Question Endpoints', () => {
     //   helpers.seedQuestionAnswers(db, testAnswers)
     // })
     
-    const reqFields = ['question_id', 'joy', 'disgust', 'sadness', 'anger', 'fear', 'mood']
+    const reqFields = [
+      'question_id',
+      'joy',
+      'disgust',
+      'sadness',
+      'anger',
+      'fear',
+      'mood'
+    ]
     reqFields.forEach(field => {
       const qAttemptBody = {
         question_id: 'e773a595-5990-4678-a63c-9ea11f3df831',
@@ -95,28 +101,25 @@ describe('Question Endpoints', () => {
           expect(res.body.fear).to.eql(qAttemptBody.fear)
           expect(res.body.mood).to.eql(qAttemptBody.mood)
           expect(res.body).to.have.property('relationship_id')
-
         })
+  })
 
+  describe('General Questions Endpoint', () => {
+
+    beforeEach('Insert data into tables', () => {
+      helpers.seedUsers(db, testUsers)
+      helpers.seedGenQuestions(db, genQuestions)
+      helpers.seedQuestionAnswers(db, testAnswers)
     })
 
-    describe('General Questions Endpoint', () => {
-
-      beforeEach('Insert data into tables', () => {
-        helpers.seedUsers(db, testUsers)
-        helpers.seedGenQuestions(db, genQuestions)
-        helpers.seedQuestionAnswers(db, testAnswers)
-      })
-
-      it('1 Responds: 200, and questions for opening section', () => {
-        
-        return supertest(app)
-          .get('/api/general-questions')
-          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-          .expect(200)
-          .expect(res => {
-            
+    it('1 Responds: 200, and questions for opening section', () => {
+      return supertest(app)
+        .get('/api/general-questions')
+        .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+        .expect(200)
+        .expect(res => {
             const row = res.body[0]
+
             expect(res.body.length).to.eql(14)
             expect(row).to.have.property('id')
             expect(row).to.have.property('question_id')
@@ -126,82 +129,77 @@ describe('Question Endpoints', () => {
           })
       })
 
-      const requiredFields = ['question', 'category', 'section']
+    const requiredFields = ['question', 'category', 'section']
 
-      requiredFields.forEach(field => {
-        const rAttemptBody = {
-          question: 'How do you do what you do?',
-          category: 'Sex',
-          section: 'Relationship'
-        }
+    requiredFields.forEach(field => {
+      const rAttemptBody = {
+        question: 'How do you do what you do?',
+        category: 'Sex',
+        section: 'Relationship'
+      }
 
-        it(`2 Responds: 400, Missing ${field} in request body.`, () => {
+      it(`2 Responds: 400, Missing ${field} in request body.`, () => {
+        delete rAttemptBody[field]
 
-          delete rAttemptBody[field]
-
-          return supertest(app)
-            .post('/api/general-questions')
-            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-            .send(rAttemptBody)
-            .expect(400, {error: `Field '${field}' is missing from request body.`})
-        })
-
+        return supertest(app)
+          .post('/api/general-questions')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(rAttemptBody)
+          .expect(400, {error: `Field '${field}' is missing from request body.`})
       })
     })
+  })
 
-    describe('User questions endpoint', () => {
+  describe('User questions endpoint', () => {
+    // beforeEach('Insert data into tables', () => {
+    //   helpers.seedUsers(db, testUsers)
+    //   helpers.seedGenQuestions(db, genQuestions)
+    //   helpers.seedQuestionAnswers(db, testAnswers)
+    // })
 
-      // beforeEach('Insert data into tables', () => {
-      //   helpers.seedUsers(db, testUsers)
-      //   helpers.seedGenQuestions(db, genQuestions)
-      //   helpers.seedQuestionAnswers(db, testAnswers)
-      // })  
-      
-      const requiredFields = ['question', 'category']
+    const requiredFields = ['question', 'category']
 
-      requiredFields.forEach(field => {
-        const qAttemptBody = {
+    requiredFields.forEach(field => {
+      const qAttemptBody = {
+        question: 'What will it take?',
+        category: 'Sex',
+      }
+
+      it(`1 Responds: Field '${field}' is missing from request body.`, () => {
+        delete qAttemptBody[field]
+
+        return supertest(app)
+          .post('/api/user-questions')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(qAttemptBody)
+          .expect(400, {error: `Field '${field}' is missing from request body.`})
+          })
+      })
+
+      it('2 Responds: 201 and question submitted', () => {
+        const newQuestion = {
           question: 'What will it take?',
           category: 'Sex',
         }
 
-        it(`1 Responds: Field '${field}' is missing from request body.`, () => {
-          delete qAttemptBody[field]
+        return supertest(app)
+          .post('/api/user-questions')
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
+          .send(newQuestion)
+          .expect(201)
+          .expect(res => {
+            const row = res.body
 
-          return supertest(app)
-            .post('/api/user-questions')
-            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-            .send(qAttemptBody)
-            .expect(400, {error: `Field '${field}' is missing from request body.`})
-            })
-        })
-
-        it('2 Responds: 201 and question submitted', () => {
-
-          const newQuestion = {
-              question: 'What will it take?',
-              category: 'Sex',
-          }
-
-          return supertest(app)
-            .post('/api/user-questions')
-            .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
-            .send(newQuestion)
-            .expect(201)
-            .expect(res => {
-              const row = res.body
-              
-              expect(row).to.have.property('id')
-              expect(row).to.have.property('question_id')
-              expect(row).to.have.property('question')
-              expect(row).to.have.property('category')
-              expect(row.user_id).to.eql(testUsers[0].user_id)
-              expect(row.question).to.eql(newQuestion.question)
-            })
+            expect(row).to.have.property('id')
+            expect(row).to.have.property('question_id')
+            expect(row).to.have.property('question')
+            expect(row).to.have.property('category')
+            expect(row.user_id).to.eql(testUsers[0].user_id)
+            expect(row.question).to.eql(newQuestion.question)
+          })
       })
 
-      it.only('3 responds: 200 and all of users answers', () => {
-
+      it('3 responds: 200 and all of users answers', () => {
         return supertest(app)
           .get('/api/user-answers')
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
@@ -226,7 +224,6 @@ describe('Question Endpoints', () => {
       })
 
       it('4 responds: 200 and relationship answers', () => {
-
         return supertest(app)
           .get('/api/rel-answers')
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
@@ -247,8 +244,8 @@ describe('Question Endpoints', () => {
             expect(row).to.have.property('section')
             expect(row.user_id).to.eql(testUsers[0].user_id)
             expect(res.body.length).to.eql(3)
-           })
-        })
+          })
       })
+    })
   })
 })

@@ -1,7 +1,7 @@
-const knex = require('knex');
-const app = require('../src/app');
-const helpers = require('./test-helpers');
-const bcrypt = require('bcryptjs');
+const knex = require('knex')
+const app = require('../src/app')
+const helpers = require('./test-helpers')
+const bcrypt = require('bcryptjs')
 
 
 describe('Users Endpoints', function() {
@@ -41,7 +41,14 @@ describe('Users Endpoints', function() {
         )
       )
       
-      const requiredFields = ['first_name', 'last_name', 'email', 'password', 'birthday', 'gender']
+      const requiredFields = [
+        'first_name',
+        'last_name',
+        'email',
+        'password',
+        'birthday',
+        'gender'
+      ]
 
       requiredFields.forEach(field => {
         const usersAttemptBody = {
@@ -52,8 +59,6 @@ describe('Users Endpoints', function() {
           birthday: '12/05/1983',
           gender: 'male',
         }
-
-
 
         it(`1 responds with 400 required error when '${field}' is missing.`, () => {
           delete usersAttemptBody[field]
@@ -68,10 +73,7 @@ describe('Users Endpoints', function() {
       })
     })
 
-    //sencond part
-
     it('2 responds password must be longer than 8 characters.', () => {
-
       const badPwTooshort = {
         ...usersAttemptBodyBad,
         password: 'badpw'
@@ -104,12 +106,10 @@ describe('Users Endpoints', function() {
         ...usersAttemptBodyBad,
         password: ' begSpace'
       }
-
       const badPWEndSpace = {
         ...usersAttemptBodyBad,
         password: 'endspace '
       }
-
       const spacePws = [badPWBegSpace, badPWEndSpace]
 
       spacePws.forEach(field => {
@@ -123,12 +123,10 @@ describe('Users Endpoints', function() {
     }) 
 
     it('5 responds: password must contain one uppercase, one number, and one special character', () => {
-
       const badPwNoSpecCh = {
         ...usersAttemptBodyBad,
         password: 'passwordtest'
       }
-
 
       return supertest(app)
         .post('/api/users')
@@ -143,69 +141,68 @@ describe('Users Endpoints', function() {
       beforeEach('emailtest', () => 
         helpers.seedUsers(db, testUsers)
       )
+
       afterEach('testemail', () => helpers.cleanTables(db))
 
-    it('6 responds: email already exists', () => {
+      it('6 responds: email already exists', () => {
+        const badEmail = {
+          ...usersAttemptBodyBad,
+        }
 
-      const badEmail = {
-        ...usersAttemptBodyBad,
-      }
-
-      return supertest(app)
-        .post('/api/users')
-        .send(badEmail)
-        .expect(400, {
-          error: 'email already exists.'
-        })
+        return supertest(app)
+          .post('/api/users')
+          .send(badEmail)
+          .expect(400, {
+            error: 'email already exists.'
+          })
+      })
     })
-  })
 
+    context('Good new user', () => {
 
+      it('7 responds: 201, serialized user, stores bcryped password', () => {
+        const newUser = {
+          ...usersAttemptBodyBad,
+        }
+        
+        return supertest(app)
+          .post('/api/users')
+          .send(newUser)
+          .expect(201)
+          .expect(res => {
+            expect(res.body).to.have.property('id')
+            expect(res.body.first_name).to.eql(newUser.first_name)
+            expect(res.body.last_name).to.eql(newUser.last_name)
+            expect(res.body.email).to.eql(newUser.email)
+            expect(res.body).to.not.have.property('password')
+            expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
+            const expectedDate = new Date().toLocaleString('en', {timeZone: 'UTC'})
+            const actualDate = new Date(res.body.date_created).toLocaleString()
+            expect(actualDate).to.eql(expectedDate)
+          })
+          .expect(res => {
+            db
+              .from('tqm_users')
+              .select('*')
+              .where({user_id: res.body.user_id})
+              .first()
+              .then( row => {
+                expect(row.first_name).to.eql(newUser.first_name)
+                expect(row.last_name).to.eql(newUser.last_name)
+                expect(row.email).to.eql(newUser.email)
+                const expectedDate = new Date().toLocaleString('en', {
+                  timeZone: 'UTC'
+                })
+                const actualDate = new Date(row.date_created).toLocaleString()
+                expect(actualDate).to.eql(expectedDate)
 
-  context('Good new user', () => {
-
-    it('7 responds: 201, serialized user, stores bcryped password', () => {
-      const newUser = {
-        ...usersAttemptBodyBad,
-      }
-
-      
-      return supertest(app)
-        .post('/api/users')
-        .send(newUser)
-        .expect(201)
-        .expect(res => {
-          expect(res.body).to.have.property('id')
-          expect(res.body.first_name).to.eql(newUser.first_name)
-          expect(res.body.last_name).to.eql(newUser.last_name)
-          expect(res.body.email).to.eql(newUser.email)
-          expect(res.body).to.not.have.property('password')
-          expect(res.headers.location).to.eql(`/api/users/${res.body.id}`)
-          const expectedDate = new Date().toLocaleString('en', {timeZone: 'UTC'})
-          const actualDate = new Date(res.body.date_created).toLocaleString()
-          expect(actualDate).to.eql(expectedDate)
-        })
-        .expect(res => {
-          db
-            .from('tqm_users')
-            .select('*')
-            .where({user_id: res.body.user_id})
-            .first()
-            .then( row => {
-              expect(row.first_name).to.eql(newUser.first_name)
-              expect(row.last_name).to.eql(newUser.last_name)
-              expect(row.email).to.eql(newUser.email)
-              const expectedDate = new Date().toLocaleString('en', {timeZone: 'UTC'})
-              const actualDate = new Date(row.date_created).toLocaleString()
-              expect(actualDate).to.eql(expectedDate)
-
-              return bcrypt.compare(row.password, newUser.password)
-            })
-            .then(compareMatch => {
-              expect(compareMatch).to.be.true
-            })
-        })
+                return bcrypt.compare(row.password, newUser.password)
+              })
+              .then(compareMatch => {
+                expect(compareMatch).to.be.true
+              })
+          })
+      })
     })
-  })
   })
 })

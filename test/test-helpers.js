@@ -228,8 +228,6 @@ function makeGenQuestions() {
   ]
 }
 
-
-
 function makeUserQuestions() {
   return [
     {
@@ -378,6 +376,7 @@ function makeUserRelationship() {
     }
   ]
 }
+
 function makeQuestionAnswers() {
   return [
         {
@@ -1088,7 +1087,6 @@ function makeQuestionAnswers() {
   ]
 }
 
-
 function retrieveData() {
   const testUsers = makeUsersArray()
   const textEntries = makeTextEntries()
@@ -1244,6 +1242,7 @@ function seedQuestionAnswers(db, testAnswers) {
       )
     })
 }
+
 function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
   const token = jwt.sign(
     {user_id: user.user_id},
@@ -1254,8 +1253,6 @@ function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
 
   return `Bearer ${token}`
 }
-
-
 
 module.exports = {
   retrieveData,

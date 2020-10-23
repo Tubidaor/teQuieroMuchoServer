@@ -1,11 +1,9 @@
-const knex = require('knex');
-const app = require('../src/app');
-const helpers = require('./test-helpers');
-
+const knex = require('knex')
+const app = require('../src/app')
+const helpers = require('./test-helpers')
 
 describe('Protected journal entry endpoints', () => {
   let db
-
   const { textEntries, testUsers } = helpers.retrieveData() 
 
   before('make knex instance', () => {
@@ -31,8 +29,7 @@ describe('Protected journal entry endpoints', () => {
       db,
       textEntries
     )
-
-    })
+  })
 
   protectedEndpoints = [
     {
@@ -61,7 +58,9 @@ describe('Protected journal entry endpoints', () => {
         const validUser = testUsers[0]
         const invalidSecret = 'bad-secret'
         return endpoint.method(endpoint.path)
-          .set('Authorization', helpers.makeAuthHeader(validUser, invalidSecret, ))
+          .set('Authorization', helpers
+            .makeAuthHeader(validUser, invalidSecret, )
+          )
           .expect(401, { error: 'Unauthorized request'})
 
       })
@@ -79,7 +78,6 @@ describe('Protected journal entry endpoints', () => {
   it('4 responds: 200, and all text entries for user', () => {
     const user = testUsers[0]
     
-
     return supertest(app)
       .get(`/api/text-entry`)
       .set('Authorization', helpers.makeAuthHeader(user))
@@ -93,7 +91,8 @@ describe('Protected journal entry endpoints', () => {
         expect(res.body.length).to.eql(3)
       })
   })
-  it.only('5 responds: 404, entry not found', () => {
+
+  it('5 responds: 404, entry not found', () => {
     const user = testUsers[1]
     
     return supertest(app)
@@ -103,12 +102,12 @@ describe('Protected journal entry endpoints', () => {
       
   })
   
-  it.only('6 responds: 201 and entry created', () => {
+  it('6 responds: 201 and entry created', () => {
     const user = testUsers[0]
-    
     const newEntry = {
       text: 'sample entry for text',
     }
+
     return supertest(app)
       .post(`/api/text-entry`)
       .set('Authorization', helpers.makeAuthHeader(user))
@@ -117,9 +116,5 @@ describe('Protected journal entry endpoints', () => {
       .expect(res => 
         expect(res.body.text).to.eql(newEntry.text)
       )
-    
   })
-
-
-
 })

@@ -1,10 +1,7 @@
-const express = require('express');
-const imagesRouter = express.Router();
-const { requireAuth } = require('../middleware/jwt-auth');
+const express = require('express')
+const imagesRouter = express.Router()
+const { requireAuth } = require('../middleware/jwt-auth')
 const path = require('path')
-
-// const dirPath = path.join(process.cwd(),'/public',`/${req.user.user_id}`)
-
 
 imagesRouter
   .route('/images')
@@ -22,7 +19,6 @@ imagesRouter
 
     getAllImageFilesByUser(req.app.get('db'), user_id)
       .then(images => {
-        
         res
           .status(200)
           .send(images)
@@ -30,4 +26,4 @@ imagesRouter
       .catch(next)
   })
 
-  module.exports = imagesRouter
+module.exports = imagesRouter

@@ -10,7 +10,6 @@ const FileServices = {
         FileServices.getFileById(db, 'tqm_file_uploads', entry.entry_id)
       )
   },
-
   getFileById(db, table, entry_id) {
     return db
       .from(table)

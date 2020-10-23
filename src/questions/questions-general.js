@@ -1,35 +1,30 @@
-const express = require('express');
-const { requireAuth } = require('../middleware/jwt-auth');
-const QuestionServices = require('./questions-services');
-const generalQsRouter = express.Router();
-const { v4: uuidv4 } = require('uuid');
-const jsonBodyParser = express.json();
+const express = require('express')
+const { requireAuth } = require('../middleware/jwt-auth')
+const QuestionServices = require('./questions-services')
+const generalQsRouter = express.Router()
+const { v4: uuidv4 } = require('uuid')
+const jsonBodyParser = express.json()
 
 generalQsRouter
   .route('/general-questions')
   .all(requireAuth)
   .get((req, res, next) => {
 
-
     QuestionServices.getOpeningQuestions(req.app.get('db'))
       .then(questions => {
-        
         res
           .status(200)
           .send(questions)
       })
       .catch(next)
-    
   })
 
 generalQsRouter
   .route('/general-questions')
   .all(requireAuth)
   .post(jsonBodyParser, (req, res, next) => {
-
     const id = uuidv4()
     const { question, category, section } = req.body
-
     const requiredFields = ['question', 'category', 'section']
 
     for(const field of requiredFields)
@@ -48,7 +43,6 @@ generalQsRouter
     
     QuestionServices.postGenQuestion(req.app.get('db'), newQuestion)
       .then(newQuestion => {
-
         res
           .status(201)
           .send(newQuestion)
@@ -57,4 +51,4 @@ generalQsRouter
   })
 
 
-  module.exports = generalQsRouter
+module.exports = generalQsRouter

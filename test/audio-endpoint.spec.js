@@ -1,7 +1,6 @@
-const knex = require('knex');
-const app = require('../src/app');
+const knex = require('knex')
+const app = require('../src/app')
 const helpers = require('./test-helpers')
-
 
 describe('Audio endpoint', () => {
   let db
@@ -27,13 +26,11 @@ describe('Audio endpoint', () => {
   })
   
   it('1 Responds: 200 and All user audio paths', () => {
-    
     return supertest(app)
       .get('/api/audio')
       .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
       .expect(200)
       .expect(res => {
-        
         const row = res.body[0]
         expect(res.body.length).to.eql(1)
         expect(row).to.have.property('id')

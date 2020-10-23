@@ -1,26 +1,37 @@
-const express = require('express');
-const path = require('path');
-const usersRouter = express.Router();
-const jsonBodyParser = express.json();
-const UserServices = require('./users-services');
-const { v4: uuidv4 } = require('uuid');
-
+const express = require('express')
+const path = require('path')
+const usersRouter = express.Router()
+const jsonBodyParser = express.json()
+const UserServices = require('./users-services')
+const { v4: uuidv4 } = require('uuid')
 
 usersRouter
   .route('/users')
   .post(jsonBodyParser, (req, res, next) => {
-    const { first_name, last_name, email, password, birthday, gender } = req.body
+    const {
+      first_name,
+      last_name,
+      email,
+      password,
+      birthday,
+      gender
+    } = req.body
     
-    for(const field of ['first_name', 'last_name', 'email', 'password', 'birthday', 'gender'])
+    for(const field of [
+      'first_name',
+      'last_name',
+      'email',
+      'password',
+      'birthday',
+      'gender'
+    ])
       if(!req.body[field]) {
         return res.status(400).json({
           error: `Missing '${field}' in request body.`
         })
       }
-      
 
     const passwordError = UserServices.validatePassword(password)
-
 
     if(passwordError) {
       return res.status(400).json({ error: passwordError})
@@ -62,7 +73,5 @@ usersRouter
       })
       .catch(next)
   })
-  
-  
 
   module.exports = usersRouter

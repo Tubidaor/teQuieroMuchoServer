@@ -1,12 +1,10 @@
-const knex = require('knex');
-const app = require('../src/app');
-const helpers = require('./test-helpers');
-const supertest = require('supertest');
-const { expect } = require('chai');
-
+const knex = require('knex')
+const app = require('../src/app')
+const helpers = require('./test-helpers')
+const supertest = require('supertest')
+const { expect } = require('chai')
 
 describe('user relationship test', () => {
-
   let db
   before('connect to db', () => {
     db = knex({
@@ -21,14 +19,11 @@ describe('user relationship test', () => {
   afterEach('clean tables', () => helpers.cleanTables(db))
   beforeEach('load tables', () => {
     helpers.seedUsers(db, testUsers)
-    
   })
 
   const { testUsers, testRelationships } = helpers.retrieveData()
   const testUser = testUsers[0]
   const testPartner = testUsers[1]
-
-  
 
   it('1 responds: 201 and posts user relationship request', () => {
     const reqBody = {
@@ -52,8 +47,6 @@ describe('user relationship test', () => {
     )
 
     it('2 responds: 200 and user relationship', () => {
-      
-      
       return supertest(app)
         .get('/api/user-relationship-request')
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
@@ -70,25 +63,27 @@ describe('user relationship test', () => {
           expect(row.partner_last_name).to.eql(rel.partner_last_name)
           expect(row.partner_email).to.eql(rel.partner_email)
           expect(row).to.have.property('anniversary')
-          
         })
-      })
+    })
 
-    it('3 responds with status 204 and deletes request', () => {
-
+    it.only('3 responds with status 204 and deletes request', () => {
       return supertest(app)
         .delete('/api/user-relationship-request')
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
-        .expect(204)
+        .expect(202)
+        .expect(res => {
+          const row = res.body
+          expect(row).to.have.property('records_deleted')
+        })
     })
-    })
+  })
 
-    describe('user-relationshp', () => {
-      beforeEach('load relationship', () => 
-        helpers.seedRelationshipReq(db, testRelationships)
-      )
-      
-      it.only('4 responds: 201 and relationship data', () => {
+  describe('user-relationshp', () => {
+    beforeEach('load relationship', () => 
+      helpers.seedRelationshipReq(db, testRelationships)
+    )
+
+    it('4 responds: 201 and relationship data', () => {
       const relationshipReqBody = {
         partner_id: testRelationships[0].user_id,
         anniversary: testRelationships[0].anniversary
@@ -99,7 +94,6 @@ describe('user relationship test', () => {
         .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
         .send(relationshipReqBody)
         .expect(201)
-        
       })
-    })
+  })
 })

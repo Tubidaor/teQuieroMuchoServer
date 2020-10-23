@@ -1,11 +1,10 @@
-const knex = require('knex');
-const app = require('../src/app');
-const helpers = require('./test-helpers');
-const jwt = require('jsonwebtoken');
+const knex = require('knex')
+const app = require('../src/app')
+const helpers = require('./test-helpers')
+const jwt = require('jsonwebtoken')
 
 describe('Auth endpoints', function() {
   let db
-
   const { testUsers } = helpers.retrieveData()
   const testUser = testUsers[0]
   
@@ -23,7 +22,7 @@ describe('Auth endpoints', function() {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  describe('POST /api/login', () => {
+  describe('POST /api/login', () =>  {
     beforeEach('insert users', () =>
       helpers.seedUsers(
         db,
@@ -31,16 +30,17 @@ describe('Auth endpoints', function() {
       )
     )
 
-  const requiredFields = ['email', 'password']
+    const requiredFields = ['email', 'password']
       
-  requiredFields.forEach(field => {
-    const loginAttemptBody = {
-      email: testUser.email,
-      password: testUser.password
-    }
+    requiredFields.forEach(field => {
+      const loginAttemptBody = {
+        email: testUser.email,
+        password: testUser.password
+      }
 
     it(`1 responds with 400 status error when '${field}' is missing`, () => {
       delete loginAttemptBody[field]
+
       return supertest(app)
         .post('/api/login')
         .send(loginAttemptBody)
@@ -73,7 +73,6 @@ describe('Auth endpoints', function() {
       email: testUser.email,
       password: testUser.password
     }
-
     const expectedToken = jwt.sign(
       { user_id: testUser.user_id},
       process.env.JWT_SECRET,
@@ -83,14 +82,13 @@ describe('Auth endpoints', function() {
         algorithm: 'HS256',
       }
     )
-      return supertest(app)
-        .post('/api/login')
-        .send(validUser)
-        .expect(200, {
-          authToken: expectedToken
-        })
-  })
-  
-})
 
+    return supertest(app)
+      .post('/api/login')
+      .send(validUser)
+      .expect(200, {
+        authToken: expectedToken
+      })
+    })
+  })
 })

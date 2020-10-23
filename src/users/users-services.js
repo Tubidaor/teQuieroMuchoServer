@@ -1,11 +1,10 @@
-const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
+const REGEX_PW_CHECK = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
 const xss = require('xss')
 const bcrypt = require('bcryptjs')
 
 const UserServices = {
 
   validatePassword(password) {
-    
     if(password.length < 8) {
       return 'Password must be longer than 8 characters.'
     }
@@ -15,22 +14,20 @@ const UserServices = {
     if(password.startsWith(' ') || password.endsWith(' ')) {
       return 'Password must not start or end with empty spaces.'
     }
-    if(!REGEX_UPPER_LOWER_NUMBER_SPECIAL.test(password)) {
-      return  `Password must contain 1 upper case, lower case, number, and special character.`
+    if(!REGEX_PW_CHECK.test(password)) {
+      return  `Password must contain 1 upper case,\
+        lower case, number, and special character.`
     }
     return null
   },
-
   getUserWithEmail(db, email) {
     return db('tqm_users')
       .where({ email })
       .first()
   },
-
   hashPassword(password) {
     return bcrypt.hash(password, 12)
   },
-
   insertUser(db, newUser) {
     return db
       .insert(newUser)
@@ -38,7 +35,6 @@ const UserServices = {
       .returning('*')
       .then(([user]) => user)
   },
-
   serializeUser(user) {
     return {
       id: user.user_id,
@@ -50,9 +46,6 @@ const UserServices = {
       date_created: user.date_created
     }
   },
-  
- 
 }
-
 
 module.exports = UserServices

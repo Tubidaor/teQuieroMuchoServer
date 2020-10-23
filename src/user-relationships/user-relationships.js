@@ -1,8 +1,8 @@
-const express = require('express');
-const { requireAuth } = require('../middleware/jwt-auth');
-const userRelationships = express.Router();
+const express = require('express')
+const { requireAuth } = require('../middleware/jwt-auth')
+const userRelationships = express.Router()
 const jsonBodyParser = express.json()
-const UserRelServices = require('./user-relationships-services');
+const UserRelServices = require('./user-relationships-services')
 const { v4:uuidv4 } = require('uuid')
 
 userRelationships
@@ -16,7 +16,6 @@ userRelationships
     const user_last_name = last_name
     const user_email = email
     const rel_anniversary = anniversary
-    //need to add check and rejection if user is already requested
     const requiredFields = ['partner_email', 'anniversary']
 
     for(const field of requiredFields) {
@@ -26,9 +25,9 @@ userRelationships
           .json({error: `Field "${field}" is required.`})
       }
     }
+
     UserRelServices.findPartner(req.app.get('db'), partner_email)
       .then(partner => {
-        console.log(partner)
         if(partner === undefined) {
           return res
             .status(418)
@@ -63,17 +62,19 @@ userRelationships
             if(relationshipExists) {
               return res
                 .status(418)
-                .json({error: 'This email is already associated with a relationship.'})
+                .json(
+                  {
+                    error: 'This email is associated with a relationship.'
+                  }
+                )
             }
           })
 
-          
-
-        return UserRelServices.postPartnerRequest(req.app.get('db'), relationshipBody)
+        return UserRelServices
+          .postPartnerRequest(req.app.get('db'), relationshipBody)
         
       })
       .then(partner => {
-        
         res
           .status(201)
           .send(partner)
@@ -84,7 +85,10 @@ userRelationships
     const {user_id} = req.user
     UserRelServices.verifyRequest(req.app.get('db'), user_id)
       .then(relationship => {
-        
+        if(relationship === undefined) {
+          return res
+            .status(200)
+        }
         res
           .status(200)
           .json(relationship)
@@ -95,14 +99,11 @@ userRelationships
     const {user_id} = req.user
     UserRelServices.deleteRequest(req.app.get('db'), user_id)
       .then(row => {
-      
-        UserRelServices.verifyRequest(req.app.get('db'), user_id )
-          .then(del => {
-            res
-              .status(204)
-              .end()
-          })
-        })
+        console.log('row', row)
+          res
+            .status(202)
+            .json({records_deleted: row})
+      })
       .catch(next)
   })
 
@@ -113,7 +114,6 @@ userRelationships
       const { user_id } = req.user
       const { partner_id, anniversary } = req.body
       const relId = uuidv4()
-      console.log(req.body)
       const relationship = {
         relationship_id: relId,
         user_id: partner_id,
@@ -123,7 +123,6 @@ userRelationships
   
       UserRelServices.postRelationship(req.app.get('db'), relationship)
         .then(row => {
-
           res
             .status(201)
             .json(row)
@@ -131,4 +130,4 @@ userRelationships
         .catch(next)
     })
 
-  module.exports = userRelationships
+module.exports = userRelationships

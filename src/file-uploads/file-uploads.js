@@ -1,20 +1,16 @@
 const express = require('express');
-const fileUploadsRouter = express.Router();
-const jsonBodyParser = express.json();
-const { requireAuth } = require('../middleware/jwt-auth');
-const multer = require('multer');
-const fs = require('file-system');
-const { v4: uuidv4 } = require('uuid');
-const FileServices = require('./file-services');
-
-const { createReadStream } = require('fs');
-
-
+const fileUploadsRouter = express.Router()
+const jsonBodyParser = express.json()
+const { requireAuth } = require('../middleware/jwt-auth')
+const multer = require('multer')
+const fs = require('file-system')
+const { v4: uuidv4 } = require('uuid')
+const FileServices = require('./file-services')
 
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // const { user_id } = req.user
-    const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
+    const { user_id } = req.user
+    console.log(user_id)
     const dir = `./uploads/${user_id}`
     fs.exists(dir, exist => {
       if (!exist) {
@@ -30,16 +26,14 @@ let storage = multer.diskStorage({
     cb(null, `${entry_id}-${file_name}`)
   }
 })
+
 const upload = multer({storage}).array('files', 5)
 
 fileUploadsRouter
   .route('/files')
-  // .all(requireAuth)
+  .all(requireAuth)
   .post(jsonBodyParser, (req, res, next ) => {
-    
-    console.log( "1st" + req.files)
     upload(req, res, (err) => {
-      console.log("2nd" + !req.files)
       if(err instanceof multer.MulterError) {
         return res.json({error: err})
       } else if (req.files.length === 0) {
@@ -50,7 +44,7 @@ fileUploadsRouter
       let newFileEntry = []
       for(let i = 0; i < req.files.length; i++) {
         const entry_id = req.files[i].filename.slice(0,36)
-        const user_id = '73b8bb71-c339-4029-bc70-6204928aa77b'
+        const { user_id } = req.user
         const fileEntry = {
           entry_id: entry_id,
           file_name: req.files[i].filename,
@@ -66,14 +60,12 @@ fileUploadsRouter
         newFileEntry
       )
       .then(entry => {
-  
         res
           .status(201)
           .send(entry)
       })
+      .catch(next)
     })
-    // .catch(next)
   })
 
-
-  module.exports = fileUploadsRouter
+module.exports = fileUploadsRouter
