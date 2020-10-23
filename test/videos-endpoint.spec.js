@@ -1,7 +1,6 @@
-const knex = require('knex');
-const app = require('../src/app');
+const knex = require('knex')
+const app = require('../src/app')
 const helpers = require('./test-helpers')
-
 
 describe('video endpoint', () => {
   let db
@@ -27,7 +26,6 @@ describe('video endpoint', () => {
   })
   
   it('1 Responds: 200 and All user video paths', () => {
-    
     return supertest(app)
       .get('/api/videos')
       .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
