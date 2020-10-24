@@ -90,6 +90,7 @@ questionaireRouter
 
     questionaireRouter
       .route('/compare-users')
+      .all( requireAuth )
       .get((req, res, next) => {
         const { user_id } = req.user
         const relationship_id = QuestionServices
