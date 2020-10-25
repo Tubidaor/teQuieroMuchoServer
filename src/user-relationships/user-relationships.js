@@ -58,7 +58,6 @@ userRelationships
         
         UserRelServices.verifyRelationship(req.app.get('db'), user_id)
           .then(relationshipExists => {
-            console.log(relationshipExists)
             if(relationshipExists) {
               return res
                 .status(418)
@@ -99,7 +98,6 @@ userRelationships
     const {user_id} = req.user
     UserRelServices.deleteRequest(req.app.get('db'), user_id)
       .then(row => {
-        console.log('row', row)
           res
             .status(202)
             .json({records_deleted: row})

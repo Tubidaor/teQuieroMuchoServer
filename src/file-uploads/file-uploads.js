@@ -10,7 +10,6 @@ const FileServices = require('./file-services')
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const { user_id } = req.user
-    console.log(user_id)
     const dir = `./uploads/${user_id}`
     fs.exists(dir, exist => {
       if (!exist) {
@@ -37,7 +36,6 @@ fileUploadsRouter
       if(err instanceof multer.MulterError) {
         return res.json({error: err})
       } else if (req.files.length === 0) {
-        console.log(req.files)
         return res.status(404).json({error: 'Please select files.'})
       } 
 
