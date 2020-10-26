@@ -53,7 +53,7 @@ app.use('/api/uploads/static',
 )
 app.use('/api', userRelationships)
 
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Hello, sweet world!')
 })
 
