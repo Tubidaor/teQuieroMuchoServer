@@ -54,7 +54,7 @@ app.use('/api/uploads/static',
 app.use('/api', userRelationships)
 
 app.get('/', (req, res) => {
-  res.send('Hello, world!')
+  res.send('Hello, sweet world!')
 })
 
 app.use(function errorHandler(error, req, res, next) {
