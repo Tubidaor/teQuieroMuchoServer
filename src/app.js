@@ -24,7 +24,7 @@ const morganOption = (NODE_ENV === 'production')
 app.options('*', cors()) 
 app.use(morgan(morganOption))
 app.use(helmet())
-let whiteList= ['https://te-quiero-mucho-app.juanbaltazar.vercel.app/','http://localhost:3000']
+let whiteList= ['https://te-quiero-mucho-app.juanbaltazar.vercel.app','http://localhost:3000']
 let corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (whiteList.indexOf(req.header('Origin')) !== -1) {
