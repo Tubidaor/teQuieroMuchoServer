@@ -19,9 +19,8 @@ const path = require('path')
 const userRelationships = require('./user-relationships/user-relationships')
 
 const morganOption = (NODE_ENV === 'production')
-  ? 'tiny'
+  ? 'common'
   : 'common';
-app.options('*', cors()) 
 app.use(morgan(morganOption))
 app.use(helmet())
 let whiteList= ['https://te-quiero-mucho-app-juanbaltazar.vercel.app','http://localhost:3000']
