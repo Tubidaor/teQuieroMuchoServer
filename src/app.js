@@ -59,6 +59,7 @@ app.get('/api', (req, res) => {
 app.use(function errorHandler(error, req, res, next) {
   let response
   if(NODE_ENV === 'production') {
+    console.error(error)
     reponse = { error: { message: 'server error' } }
   } else {
     console.error(error)
