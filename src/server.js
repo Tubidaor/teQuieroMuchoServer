@@ -5,9 +5,13 @@ const { PORT, DATABASE_URL } = require('./config')
 const db = knex({
   client: 'pg',
   connection: DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  dialect: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true, // This will help you. But you will see nwe error
+      rejectUnauthorized: false // This line will fix new error
+    }
+  },
 })
 
 
